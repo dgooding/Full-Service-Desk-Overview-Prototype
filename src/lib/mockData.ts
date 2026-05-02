@@ -2,7 +2,7 @@ export const teamMembers = [
   {
     id: "rep-001",
     name: "Alex Johnson",
-    role: "Tier 1 Specialist",
+    role: "Senior Consultant",
     status: "online",
     metrics: {
       csat: 94,
@@ -10,12 +10,13 @@ export const teamMembers = [
       aht: "6m 12s",
       qaScore: 92,
     },
+    skills: { "ETS": 5, "Claims": 4, "Agent": 5, "Property": 3, "Fleet": 4 },
     avatar: "https://i.pravatar.cc/150?u=a042581f4e29026024d",
   },
   {
     id: "rep-002",
     name: "Samantha Lee",
-    role: "Tier 2 Analyst",
+    role: "Claims Specialist",
     status: "offline",
     metrics: {
       csat: 98,
@@ -23,12 +24,13 @@ export const teamMembers = [
       aht: "8m 45s",
       qaScore: 97,
     },
+    skills: { "ETS": 3, "Claims": 5, "Agent": 4, "Property": 5, "Fleet": 3 },
     avatar: "https://i.pravatar.cc/150?u=a04258a2462d826712d",
   },
   {
     id: "rep-003",
     name: "Marcus Green",
-    role: "Tier 1 Specialist",
+    role: "Field Adjuster",
     status: "in-call",
     metrics: {
       csat: 82,
@@ -36,12 +38,13 @@ export const teamMembers = [
       aht: "11m 30s",
       qaScore: 78,
     },
+    skills: { "ETS": 2, "Claims": 3, "Agent": 2, "Property": 4, "Fleet": 2 },
     avatar: "https://i.pravatar.cc/150?u=a042581f4e29026704d",
   },
   {
     id: "rep-004",
     name: "Priya Patel",
-    role: "Tier 1 Specialist",
+    role: "Property Lead",
     status: "online",
     metrics: {
       csat: 89,
@@ -49,12 +52,13 @@ export const teamMembers = [
       aht: "7m 50s",
       qaScore: 86,
     },
+    skills: { "ETS": 4, "Claims": 4, "Agent": 5, "Property": 5, "Fleet": 5 },
     avatar: "https://i.pravatar.cc/150?u=a04258114e29026302d",
   },
   {
     id: "rep-005",
     name: "David Kim",
-    role: "Tier 2 Analyst",
+    role: "Fleet Manager",
     status: "away",
     metrics: {
       csat: 91,
@@ -62,6 +66,7 @@ export const teamMembers = [
       aht: "9m 10s",
       qaScore: 88,
     },
+    skills: { "ETS": 5, "Claims": 2, "Agent": 3, "Property": 2, "Fleet": 5 },
     avatar: "https://i.pravatar.cc/150?u=a048581f4e29026701d",
   },
 ];

@@ -12,8 +12,9 @@ export type QAReview = {
   score: number;
   date: string;
   reviewer: string;
-  status: string;
+  status: 'draft' | 'completed';
   details?: Record<string, number>;
+  categoryNotes?: Record<string, string>;
   notes?: string;
 };
 export type CoachingSession = typeof initialSessions[0] & { 
@@ -45,6 +46,8 @@ interface StoreContextType {
   addGoal: (goal: Omit<Goal, 'id'>) => void;
   updateGoalStatus: (id: string, status: string, progressValue: number) => void;
   addNote: (note: Omit<Note, 'id' | 'date' | 'author'>) => void;
+  focusMode: boolean;
+  setFocusMode: (val: boolean) => void;
 }
 
 const StoreContext = createContext<StoreContextType | undefined>(undefined);
@@ -67,6 +70,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
   const [performance, setPerformance] = useState(performanceData);
   const [goals, setGoals] = useState<Goal[]>(initialGoals);
   const [notes, setNotes] = useState<Note[]>(initialNotes);
+  const [focusMode, setFocusMode] = useState(false);
 
   useEffect(() => {
     const savedData = localStorage.getItem('coachapp_data');
@@ -87,9 +91,9 @@ export function StoreProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     localStorage.setItem('coachapp_data', JSON.stringify({
-      agents, qaReviews, sessions, performance, goals, notes
+      agents, qaReviews, sessions, performance, goals, notes, focusMode
     }));
-  }, [agents, qaReviews, sessions, performance, goals, notes]);
+  }, [agents, qaReviews, sessions, performance, goals, notes, focusMode]);
 
   // Derived calculations: Update agent QA score based on reviews
   useEffect(() => {
@@ -158,9 +162,9 @@ export function StoreProvider({ children }: { children: ReactNode }) {
 
   return (
     <StoreContext.Provider value={{
-      agents, qaReviews, sessions, performance, goals, notes,
+      agents, qaReviews, sessions, performance, goals, notes, focusMode,
       addAgent, updateAgentStatus, updateAgentSkill, addQAReview, addSession, completeSession,
-      addGoal, updateGoalStatus, addNote
+      addGoal, updateGoalStatus, addNote, setFocusMode
     }}>
       {children}
     </StoreContext.Provider>

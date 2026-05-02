@@ -160,6 +160,38 @@ export default function SiteFunctionHelp() {
           </div>
 
           <div className="space-y-32">
+            {/* Section: FAQ Accordions */}
+            <section id="faq" className="scroll-mt-8">
+              <div className="flex items-center gap-3 mb-6">
+                <div className="px-3 py-1 bg-blue-100 text-blue-600 rounded-full text-[10px] font-black uppercase tracking-widest">Chapter 00</div>
+                <div className="h-px flex-1 bg-slate-100"></div>
+              </div>
+              <h2 className="text-3xl font-black text-slate-900 tracking-tight mb-8">Frequent Operational Procedures</h2>
+              
+              <div className="space-y-4">
+                {[
+                  { q: "How do I initialize a new coaching session?", a: "Navigate to the 'Coaching' section in the sidebar. Click the 'Initialize Session' button. You can then select an agent and fill out the STAR log or free-form notes. Once complete, click 'Finalize Session' to commit it to the agent's history." },
+                  { q: "What defines an 'Expert' level in the Skills Matrix?", a: "Level 5 (Expert) is reserved for Subject Matter Experts (SMEs). To achieve this, an agent must demonstrate 100% technical accuracy across at least 50 reviewed tickets within a specific category and have peer-review verification." },
+                  { q: "How are the Dashboard KPIs calculated?", a: "KPIs are aggregated in real-time from the underlying QA Reviews and ticket performance data. CSAT is pulled from customer feedback loops, while QA Score is the average of all finalized evaluations in the current trailing 30-day window." },
+                  { q: "Can I delete a finalized QA Review?", a: "For audit integrity, finalized reviews cannot be deleted by standard coach accounts. If a correction is needed, please contact the Quality Lead or System Administrator to initiate a record reversal." }
+                ].map((faq, i) => (
+                  <details key={i} className="group bg-white border border-slate-200 rounded-[2rem] overflow-hidden shadow-sm transition-all hover:border-blue-200">
+                    <summary className="list-none flex items-center justify-between p-8 cursor-pointer select-none">
+                      <span className="text-sm font-black text-slate-900 uppercase tracking-tight">{faq.q}</span>
+                      <div className="w-8 h-8 rounded-full bg-slate-50 flex items-center justify-center text-slate-400 group-open:bg-blue-600 group-open:text-white transition-all group-open:rotate-180">
+                        <ChevronDown size={18} strokeWidth={3} />
+                      </div>
+                    </summary>
+                    <div className="px-8 pb-8 animate-in slide-in-from-top-2 duration-300">
+                      <p className="text-sm text-slate-500 font-medium leading-relaxed pl-4 border-l-2 border-blue-100">
+                        {faq.a}
+                      </p>
+                    </div>
+                  </details>
+                ))}
+              </div>
+            </section>
+
             {/* Section: Introduction */}
             <section id="introduction" className="scroll-mt-8">
               <div className="flex items-center gap-3 mb-6">

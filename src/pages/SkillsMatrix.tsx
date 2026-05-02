@@ -8,12 +8,11 @@ import { cn } from '../lib/utils';
 import { toast } from 'sonner';
 
 const SKILLS = [
-  "Active Directory",
-  "VPN Troubleshooting",
-  "O365 & Exchange",
-  "Mac / Jamf",
-  "Hardware & Periphs",
-  "VIP Support"
+  "ETS",
+  "Claims",
+  "Agent",
+  "Property",
+  "Fleet"
 ];
 
 const SKILL_LEVELS: Record<number, { label: string, color: string, description: string, badge: string }> = {

@@ -28,7 +28,7 @@ const navItems = [
 export default function CoachLayout() {
   const [mobileMenuOpen, setMobileMenuOpen] = React.useState(false);
   const location = useLocation();
-  const { agents } = useStore();
+  const { agents, focusMode } = useStore();
 
   // Helper to determine breadcrumb based on route
   const getBreadcrumb = () => {
@@ -63,87 +63,98 @@ export default function CoachLayout() {
 
       {/* Sidebar Navigation */}
       <aside className={cn(
-        "fixed inset-y-0 left-0 z-50 w-64 bg-white border-r border-slate-200 shadow-sm transition-transform duration-300 ease-in-out flex flex-col md:translate-x-0 md:static md:block",
+        "fixed inset-y-0 left-0 z-50 bg-white border-r border-slate-200 shadow-sm transition-all duration-300 ease-in-out flex flex-col md:translate-x-0 md:static md:block",
+        focusMode ? "w-20" : "w-64",
         mobileMenuOpen ? "translate-x-0" : "-translate-x-full"
       )}>
         <div className="h-full flex flex-col">
-          <div className="h-16 flex border-b border-slate-100 items-center px-6 font-semibold text-xl gap-3">
-            <div className="w-8 h-8 rounded bg-blue-600 flex items-center justify-center text-white font-bold text-sm shadow-md">SD</div>
-            <span className="tracking-tight font-bold text-slate-800">LeadCoach</span>
+          <div className={cn("h-16 flex border-b border-slate-100 items-center px-6 transition-all", focusMode ? "justify-center px-0" : "px-6 gap-3")}>
+            <div className="w-8 h-8 rounded bg-blue-600 flex items-center justify-center text-white font-bold text-sm shadow-md shrink-0">SD</div>
+            {!focusMode && <span className="tracking-tight font-bold text-slate-800">LeadCoach</span>}
           </div>
 
-          <div className="p-4 flex-1 overflow-y-auto">
-            <div className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-4 px-2">Main Menu</div>
+          <div className="p-4 flex-1 overflow-y-auto overflow-x-hidden">
+            {!focusMode && <div className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-4 px-2">Main Menu</div>}
             <nav className="space-y-1">
               {navItems.map((item) => (
                 <NavLink
                   key={item.name}
                   to={item.path}
+                  title={focusMode ? item.name : ""}
                   className={({ isActive }) => cn(
-                    "flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors",
+                    "flex items-center rounded-lg text-sm font-medium transition-all",
+                    focusMode ? "justify-center p-2.5" : "gap-3 px-3 py-2.5",
                     isActive 
                       ? "bg-blue-50 text-blue-700" 
                       : "text-slate-600 hover:bg-slate-50 hover:text-slate-900"
                   )}
                   onClick={() => setMobileMenuOpen(false)}
                 >
-                  <item.icon size={18} className="opacity-80" />
-                  {item.name}
+                  <item.icon size={focusMode ? 22 : 18} className="opacity-80" />
+                  {!focusMode && item.name}
                 </NavLink>
               ))}
             </nav>
 
-            <div className="text-xs font-semibold text-slate-400 uppercase tracking-wider mt-8 mb-4 px-2">System</div>
-            <nav className="space-y-1">
+            {!focusMode && <div className="text-xs font-semibold text-slate-400 uppercase tracking-wider mt-8 mb-4 px-2">System</div>}
+            <nav className={cn("space-y-1", focusMode && "mt-8")}>
               <NavLink
                 to="/settings"
+                title={focusMode ? "Settings" : ""}
                 className={({ isActive }) => cn(
-                  "flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors",
+                  "flex items-center rounded-lg text-sm font-medium transition-all",
+                  focusMode ? "justify-center p-2.5" : "gap-3 px-3 py-2.5",
                   isActive 
                     ? "bg-slate-100 text-slate-900" 
                     : "text-slate-600 hover:bg-slate-50 hover:text-slate-900"
                 )}
                 onClick={() => setMobileMenuOpen(false)}
               >
-                <Settings size={18} className="opacity-80" />
-                Settings
+                <Settings size={focusMode ? 22 : 18} className="opacity-80" />
+                {!focusMode && "Settings"}
               </NavLink>
               <NavLink
                 to="/help"
+                title={focusMode ? "Integration Help" : ""}
                 className={({ isActive }) => cn(
-                  "flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors",
+                  "flex items-center rounded-lg text-sm font-medium transition-all",
+                  focusMode ? "justify-center p-2.5" : "gap-3 px-3 py-2.5",
                   isActive 
                     ? "bg-slate-100 text-slate-900 font-bold" 
                     : "text-slate-600 hover:bg-slate-50 hover:text-slate-900"
                 )}
                 onClick={() => setMobileMenuOpen(false)}
               >
-                <HelpCircle size={18} className="opacity-80" />
-                Integration Help
+                <HelpCircle size={focusMode ? 22 : 18} className="opacity-80" />
+                {!focusMode && "Integration Help"}
               </NavLink>
               
-              <NavLink
-                to="/help/functions"
-                className={({ isActive }) => cn(
-                  "flex items-center gap-3 px-10 py-2 rounded-lg text-xs font-semibold transition-colors",
-                  isActive 
-                    ? "text-blue-600 bg-blue-50/50" 
-                    : "text-slate-500 hover:text-slate-700 hover:bg-slate-50"
-                )}
-                onClick={() => setMobileMenuOpen(false)}
-              >
-                Site Function Help
-              </NavLink>
+              {!focusMode && (
+                <NavLink
+                  to="/help/functions"
+                  className={({ isActive }) => cn(
+                    "flex items-center gap-3 px-10 py-2 rounded-lg text-xs font-semibold transition-colors",
+                    isActive 
+                      ? "text-blue-600 bg-blue-50/50" 
+                      : "text-slate-500 hover:text-slate-700 hover:bg-slate-50"
+                  )}
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  Site Function Help
+                </NavLink>
+              )}
             </nav>
           </div>
 
           <div className="mt-auto p-4 border-t border-slate-100 shrink-0">
-            <div className="flex items-center gap-3 px-3 py-2 cursor-pointer hover:bg-slate-50 rounded-lg transition-colors">
-              <img src="https://i.pravatar.cc/150?u=coach" alt="Coach Profile" className="w-9 h-9 rounded-full bg-slate-200 border border-slate-300" />
-              <div className="flex flex-col">
-                <span className="text-sm font-medium leading-none">Daniel Gooding</span>
-                <span className="text-xs text-slate-500 mt-1">Lead Coach</span>
-              </div>
+            <div className={cn("flex items-center cursor-pointer hover:bg-slate-50 rounded-lg transition-all", focusMode ? "justify-center" : "gap-3 px-3 py-2")}>
+              <img src="https://i.pravatar.cc/150?u=coach" alt="Coach Profile" className="w-9 h-9 rounded-full bg-slate-200 border border-slate-300 shrink-0" />
+              {!focusMode && (
+                <div className="flex flex-col">
+                  <span className="text-sm font-medium leading-none">Daniel Gooding</span>
+                  <span className="text-xs text-slate-500 mt-1">Lead Coach</span>
+                </div>
+              )}
             </div>
           </div>
         </div>

@@ -3,7 +3,7 @@ import {
   Calendar, Plus, Clock, FileText, Check, FileEdit, 
   Sparkles, Send, Loader2, Info, ChevronRight, 
   Share2, Save, Trash2, Tag, Archive, Target,
-  Star, Award, ShieldAlert, BadgeInfo, CheckCircle2
+  Star, Award, ShieldAlert, BadgeInfo, CheckCircle2, User
 } from 'lucide-react';
 import { useStore } from '../contexts/StoreContext';
 import { Link } from 'react-router-dom';
@@ -18,13 +18,6 @@ const COACHING_TYPES = [
   "Behavioral / Soft Skills",
   "Quick Check-in"
 ];
-
-const RATINGS = [
-  { id: 'EXCEEDS', label: 'EXCEEDS', color: 'bg-emerald-50 text-emerald-700 border-emerald-200 hover:bg-emerald-100', activeClass: 'bg-emerald-600 text-white border-emerald-600' },
-  { id: 'MEETS', label: 'MEETS', color: 'bg-blue-50 text-blue-700 border-blue-200 hover:bg-blue-100', activeClass: 'bg-blue-600 text-white border-blue-600' },
-  { id: 'NEEDS IMPROVEMENT', label: 'NEEDS IMPROVEMENT', color: 'bg-amber-50 text-amber-700 border-amber-200 hover:bg-amber-100', activeClass: 'bg-amber-600 text-white border-amber-600' },
-  { id: 'DOES NOT MEET', label: 'DOES NOT MEET', color: 'bg-rose-50 text-rose-700 border-rose-200 hover:bg-rose-100', activeClass: 'bg-rose-600 text-white border-rose-600' }
-] as const;
 
 const GROWTH_TAGS = [
   "ACTIVE LISTENING", "DE-ESCALATION", "TECHNICAL ACCURACY", "SLA MANAGEMENT",
@@ -45,7 +38,6 @@ export default function CoachingSessions() {
   const [followUpDate, setFollowUpDate] = useState(new Date().toLocaleDateString());
   const [followUpNotes, setFollowUpNotes] = useState('');
   const [interactionRef, setInteractionRef] = useState('');
-  const [rating, setRating] = useState<typeof RATINGS[number]['id'] | null>(null);
   const [selectedStrengths, setSelectedStrengths] = useState<string[]>([]);
   const [selectedOpportunities, setSelectedOpportunities] = useState<string[]>([]);
   
@@ -61,7 +53,6 @@ export default function CoachingSessions() {
     setStarLog({ s: '', t: '', a: '', r: '' });
     setFreeNotes('');
     setInteractionRef('');
-    setRating(null);
     setSelectedStrengths([]);
     setSelectedOpportunities([]);
     setActionItemsStr('');
@@ -101,7 +92,6 @@ export default function CoachingSessions() {
       date: session.date
     });
     setInteractionRef(session.interactionRef || '');
-    setRating(session.rating || null);
     setSelectedStrengths(session.strengths || []);
     setSelectedOpportunities(session.growthOpportunities || []);
     
@@ -166,7 +156,6 @@ export default function CoachingSessions() {
       type: sessionFormData.type,
       followUpNotes: followUpNotes || undefined,
       interactionRef: interactionRef || undefined,
-      rating: rating || undefined,
       strengths: selectedStrengths.length > 0 ? selectedStrengths : undefined,
       growthOpportunities: selectedOpportunities.length > 0 ? selectedOpportunities : undefined
     };
@@ -311,8 +300,6 @@ export default function CoachingSessions() {
                     }
                   }
 
-                  const ratingObj = RATINGS.find(r => r.id === sess.rating);
-
                   return (
                     <div key={sess.id} className="p-8 hover:bg-slate-50/50 transition-all group relative border-b border-slate-50 last:border-0">
                       <div className="flex flex-col md:flex-row md:items-start justify-between gap-6 mb-6">
@@ -328,11 +315,6 @@ export default function CoachingSessions() {
                               </h3>
                               <div className="flex items-center gap-3 mt-1">
                                 <span className="text-[11px] font-bold text-slate-400 uppercase tracking-widest">Agent: <Link to={`/team/${sess.repId}`} className="text-blue-600 hover:underline">{sess.rep}</Link></span>
-                                {ratingObj && (
-                                  <span className={cn("text-[10px] font-black px-2 py-1 rounded-full uppercase tracking-widest border", ratingObj.color)}>
-                                    {ratingObj.label}
-                                  </span>
-                                )}
                               </div>
                            </div>
                         </div>
@@ -404,88 +386,133 @@ export default function CoachingSessions() {
       </div>
 
       {activeModal && (activeModal === 'log' || activeModal === 'complete') && (
-        <div className="fixed inset-0 bg-slate-100/90 backdrop-blur-md flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-[2.5rem] shadow-[0_20px_50px_rgba(0,0,0,0.1)] w-full max-w-[1100px] max-h-[92vh] overflow-hidden flex flex-col border border-slate-200 animate-in fade-in zoom-in slide-in-from-bottom-5 duration-300">
+        <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-xl flex items-center justify-center p-6 z-50 overflow-y-auto">
+          <div className="bg-white w-full max-w-5xl rounded-[2.5rem] shadow-[0_32px_64px_-16px_rgba(0,0,0,0.2)] flex flex-col border border-slate-200 animate-in fade-in zoom-in duration-500 my-8">
             
-            <div className="p-8 border-b border-slate-100 flex items-center justify-between shrink-0 bg-white">
-              <div className="flex items-center gap-4">
-                 <div className="bg-slate-900 text-white p-3 rounded-2xl shadow-xl rotate-3">
-                   <FileText size={24} strokeWidth={2.5} />
-                 </div>
-                 <div>
-                    <h2 className="text-2xl font-black text-slate-900 tracking-tight">
-                      New Coaching Entry
-                    </h2>
-                    <p className="text-[10px] font-extrabold text-slate-400 uppercase tracking-[0.25em] mt-0.5">Frontline Tech Coaching Workflow</p>
-                 </div>
+            {/* Elegant Header */}
+            <div className="px-12 py-10 border-b border-slate-100 flex items-center justify-between shrink-0">
+              <div className="flex items-center gap-6">
+                <div className="bg-blue-600 text-white p-3.5 rounded-2xl shadow-xl shadow-blue-200 -rotate-2">
+                  <FileText size={28} strokeWidth={2.5} />
+                </div>
+                <div className="space-y-1">
+                  <h2 className="text-3xl font-black text-slate-900 tracking-tight leading-none">
+                    Performance Coaching Log
+                  </h2>
+                  <div className="flex items-center gap-3">
+                    <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Tech Ops Workflow</span>
+                    <div className="w-1 h-1 bg-slate-300 rounded-full"></div>
+                    <span className="text-[10px] font-bold text-blue-600 uppercase tracking-widest">{activeModal === 'complete' ? 'Completing Scheduled' : 'Direct Log'}</span>
+                  </div>
+                </div>
               </div>
-              <div className="flex items-center gap-8">
-                <button onClick={() => setActiveModal(null)} className="text-slate-300 hover:text-slate-900 transition-all text-4xl leading-none font-light">&times;</button>
-              </div>
+              <button 
+                onClick={() => setActiveModal(null)} 
+                className="w-12 h-12 rounded-full border border-slate-100 flex items-center justify-center text-slate-400 hover:text-slate-900 hover:bg-slate-50 transition-all text-2xl leading-none"
+              >
+                &times;
+              </button>
             </div>
             
-            <div className="flex-1 overflow-y-auto p-8 bg-slate-50/20">
-              <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+            <div className="flex-1 overflow-y-auto">
+              <div className="grid grid-cols-1 lg:grid-cols-12">
                 
-                <div className="lg:col-span-8 space-y-8">
+                {/* Main Entry Side */}
+                <div className="lg:col-span-8 p-12 space-y-12 border-r border-slate-100">
                   
-                  <div className="bg-white border border-slate-200 rounded-[2rem] p-8 shadow-sm">
-                    <div className="flex items-center justify-between mb-8 pb-4 border-b border-slate-100">
-                       <h3 className="text-xs font-black text-slate-800 uppercase tracking-[0.2em] flex items-center gap-3">
-                          <div className="w-1.5 h-1.5 bg-blue-600 rounded-full animate-pulse"></div>
-                          SESSION ENTRY DETAILS
+                  {/* Primary Selectors */}
+                  <div className="grid grid-cols-2 gap-8">
+                    <div className="space-y-3">
+                      <label className="flex items-center gap-2 text-[11px] font-black text-slate-800 uppercase tracking-widest">
+                        <User size={14} className="text-blue-600" /> Frontend Tech
+                      </label>
+                      <select 
+                        className="w-full bg-slate-50 border border-slate-200 rounded-2xl p-4 text-sm font-bold text-slate-700 shadow-sm focus:bg-white focus:ring-4 focus:ring-blue-50 focus:border-blue-500 transition-all appearance-none cursor-pointer"
+                        value={sessionFormData.repId} 
+                        onChange={e => setSessionFormData({...sessionFormData, repId: e.target.value})}
+                      >
+                        <option value="">Select Technician...</option>
+                        {agents.map(a => <option key={a.id} value={a.id}>{a.name}</option>)}
+                      </select>
+                    </div>
+                    <div className="space-y-3">
+                      <label className="flex items-center gap-2 text-[11px] font-black text-slate-800 uppercase tracking-widest">
+                        <Tag size={14} className="text-blue-600" /> Coaching Vector
+                      </label>
+                      <select 
+                        className="w-full bg-slate-50 border border-slate-200 rounded-2xl p-4 text-sm font-bold text-slate-700 shadow-sm focus:bg-white focus:ring-4 focus:ring-blue-50 focus:border-blue-500 transition-all appearance-none cursor-pointer"
+                        value={sessionFormData.type} 
+                        onChange={e => setSessionFormData({...sessionFormData, type: e.target.value})}
+                      >
+                        {COACHING_TYPES.map(t => <option key={t}>{t}</option>)}
+                      </select>
+                    </div>
+                  </div>
+
+                  {/* Ref & Date */}
+                  <div className="grid grid-cols-2 gap-8">
+                    <div className="space-y-3">
+                      <label className="flex items-center gap-2 text-[11px] font-black text-slate-800 uppercase tracking-widest">
+                        <Target size={14} className="text-blue-600" /> Interaction Reference
+                      </label>
+                      <input 
+                        type="text" 
+                        placeholder="INC-XXXXXX"
+                        className="w-full bg-slate-50 border border-slate-200 rounded-2xl p-4 text-sm font-bold shadow-sm focus:bg-white focus:ring-4 focus:ring-blue-50 focus:border-blue-500 outline-none transition-all font-mono"
+                        value={interactionRef} onChange={e => setInteractionRef(e.target.value)}
+                      />
+                    </div>
+                    <div className="space-y-3">
+                      <label className="flex items-center gap-2 text-[11px] font-black text-slate-800 uppercase tracking-widest">
+                        <Calendar size={14} className="text-blue-600" /> Coaching Date
+                      </label>
+                      <input 
+                        type="text" 
+                        className="w-full bg-slate-50 border border-slate-200 rounded-2xl p-4 text-sm font-bold shadow-sm focus:bg-white focus:ring-4 focus:ring-blue-50 focus:border-blue-500 outline-none transition-all"
+                        value={sessionFormData.date} onChange={e => setSessionFormData({ ...sessionFormData, date: e.target.value })}
+                      />
+                    </div>
+                  </div>
+
+                  <div className="pt-4">
+                    <div className="flex items-center justify-between mb-6">
+                       <h3 className="text-xs font-black text-slate-900 uppercase tracking-[0.2em] flex items-center gap-3">
+                          <div className="w-2 h-2 bg-blue-600 rounded-full animate-pulse"></div>
+                          Observation Methodology
                        </h3>
                        <div className="flex p-1 bg-slate-100 rounded-xl border border-slate-200">
                           <button 
                             onClick={() => setCompleteMode('STAR')}
-                            className={cn("px-5 py-1.5 text-[10px] font-black rounded-lg transition-all", completeMode === 'STAR' ? "bg-white text-slate-900 shadow-md" : "text-slate-400 hover:text-slate-600")}
-                          >STAR FORMAT</button>
+                            className={cn("px-6 py-2 text-[10px] font-black rounded-lg transition-all uppercase tracking-widest", completeMode === 'STAR' ? "bg-white text-slate-900 shadow-md" : "text-slate-400 hover:text-slate-600")}
+                          >STAR Format</button>
                           <button 
                             onClick={() => setCompleteMode('FreeForm')}
-                            className={cn("px-5 py-1.5 text-[10px] font-black rounded-lg transition-all", completeMode === 'FreeForm' ? "bg-white text-slate-900 shadow-md" : "text-slate-400 hover:text-slate-600")}
-                          >FREE FORM</button>
+                            className={cn("px-6 py-2 text-[10px] font-black rounded-lg transition-all uppercase tracking-widest", completeMode === 'FreeForm' ? "bg-white text-slate-900 shadow-md" : "text-slate-400 hover:text-slate-600")}
+                          >Free Form</button>
                        </div>
                     </div>
 
-                    <div className="grid grid-cols-2 gap-6 mb-8">
-                      <div className="space-y-2">
-                        <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">COACHING TYPE</label>
-                        <select 
-                          className="w-full bg-slate-50 border border-slate-200 rounded-xl p-4 text-sm font-bold text-slate-700 shadow-sm focus:bg-white focus:border-blue-500 transition-all"
-                          value={sessionFormData.type} onChange={e => setSessionFormData({...sessionFormData, type: e.target.value})}
-                        >
-                          {COACHING_TYPES.map(t => <option key={t}>{t}</option>)}
-                        </select>
-                      </div>
-                      <div className="space-y-2">
-                        <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">INTERACTION REF #</label>
-                        <input 
-                          type="text" 
-                          placeholder="e.g. INC-0082721"
-                          className="w-full bg-slate-50 border border-slate-200 rounded-xl p-4 text-sm font-bold shadow-sm focus:bg-white focus:border-blue-500 outline-none transition-all"
-                          value={interactionRef} onChange={e => setInteractionRef(e.target.value)}
-                        />
-                      </div>
-                    </div>
-
                     {completeMode === 'STAR' ? (
-                      <div className="space-y-6">
+                      <div className="space-y-8">
                         {[
-                          { id: 's', label: 'SITUATION', desc: 'Context & Problem Statement', placeholder: 'Describe the specific scenario or issue encountered...' },
-                          { id: 't', label: 'TASK', desc: 'Expected Procedure', placeholder: 'What was the technician expected to do according to standard SOP?' },
-                          { id: 'a', label: 'ACTION', desc: 'Observed Behavior', placeholder: 'Detail the steps taken by the technician during the interaction...' },
-                          { id: 'r', label: 'RESULT', desc: 'Outcome & Impact', placeholder: 'What was the final outcome and customer impact?' }
+                          { id: 's', label: 'Situation', desc: 'Context & Baseline', color: 'border-l-blue-600', bg: 'bg-blue-50/50' },
+                          { id: 't', label: 'Task', desc: 'Standard Operating Procedure', color: 'border-l-emerald-600', bg: 'bg-emerald-50/50' },
+                          { id: 'a', label: 'Action', desc: 'Observed Technician Steps', color: 'border-l-amber-600', bg: 'bg-amber-50/50' },
+                          { id: 'r', label: 'Result', desc: 'Outcome & Customer Impact', color: 'border-l-purple-600', bg: 'bg-purple-50/50' }
                         ].map((field) => (
-                           <div key={field.id} className="relative">
-                              <div className="flex items-center justify-between mb-3 px-1">
-                                <label className="text-[10px] font-black text-slate-800 uppercase tracking-[0.2em] flex items-center gap-2">
-                                   <div className="w-1.5 h-1.5 bg-blue-600 rounded-full"></div>
-                                   {field.label}: <span className="text-slate-400 font-bold ml-1">{field.desc}</span>
+                           <div key={field.id} className="group/field">
+                              <div className="flex items-baseline gap-2 mb-3">
+                                <span className="text-lg font-black text-slate-900 uppercase">{field.id}</span>
+                                <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest">
+                                   {field.label} &mdash; <span className="italic">{field.desc}</span>
                                 </label>
                               </div>
                               <textarea 
-                                className="w-full bg-white border border-slate-200 rounded-2xl p-6 text-sm font-medium outline-none transition-all min-h-[120px] leading-relaxed shadow-sm focus:ring-4 focus:ring-blue-50/50 focus:border-blue-500 placeholder:text-slate-300"
-                                placeholder={field.placeholder}
+                                className={cn(
+                                  "w-full bg-slate-50/30 border border-slate-200 rounded-[1.5rem] p-6 text-sm font-medium outline-none transition-all min-h-[120px] leading-relaxed shadow-sm focus:ring-4 focus:bg-white placeholder:text-slate-300 border-l-4",
+                                  field.color
+                                )}
+                                placeholder={`Enter ${field.label.toLowerCase()} details...`}
                                 value={starLog[field.id as keyof typeof starLog]} 
                                 onChange={e => setStarLog({ ...starLog, [field.id]: e.target.value })}
                               />
@@ -494,140 +521,117 @@ export default function CoachingSessions() {
                       </div>
                     ) : (
                       <div className="space-y-4">
-                        <div className="flex items-center justify-between mb-1">
-                          <label className="text-xs font-black text-slate-800 uppercase tracking-widest">COMPREHENSIVE NOTES</label>
-                        </div>
                         <textarea 
-                          className="w-full bg-white border border-slate-200 rounded-[2rem] p-8 text-sm font-medium outline-none focus:ring-4 focus:ring-blue-50 focus:border-blue-500 transition-all min-h-[400px] leading-relaxed shadow-inner"
-                          placeholder="Document observations and key takeaways..."
+                          className="w-full bg-slate-50/50 border border-slate-200 rounded-[2.5rem] p-10 text-sm font-medium outline-none focus:ring-8 focus:ring-blue-50/30 focus:border-blue-500 focus:bg-white transition-all min-h-[500px] leading-relaxed shadow-inner font-serif"
+                          placeholder="Document comprehensive observations, technical gaps, and specific feedback for the technician..."
                           value={freeNotes} onChange={e => setFreeNotes(e.target.value)}
                         />
                       </div>
                     )}
                   </div>
+                </div>
 
-                  <div className="bg-white border border-slate-200 rounded-[2rem] p-10 shadow-sm relative group/matrix">
-                    <h3 className="text-xs font-black text-slate-800 uppercase tracking-[0.2em] mb-10 border-l-[3px] border-slate-900 pl-4">GROWTH MATRIX / TAGGING</h3>
-                    
-                    <div className="grid grid-cols-2 gap-12">
-                      <div className="space-y-6">
-                        <label className="text-[11px] font-black text-emerald-600 uppercase tracking-widest block">STRENGTHS IDENTIFIED</label>
+                {/* Growth & Follow-up Side */}
+                <div className="lg:col-span-4 bg-slate-50/30 p-12 space-y-12">
+                  
+                  {/* Growth Matrix */}
+                  <div className="space-y-8">
+                     <h3 className="text-[11px] font-black text-slate-900 uppercase tracking-[0.25em] flex items-center gap-2">
+                       Growth Matrix
+                     </h3>
+
+                     <div className="space-y-6">
+                        <label className="text-[10px] font-black text-emerald-600 uppercase tracking-widest block border-b border-emerald-100 pb-2">Core Strengths</label>
                         <div className="flex flex-wrap gap-2">
                            {GROWTH_TAGS.map(tag => (
                               <button 
                                 key={tag} 
                                 onClick={() => toggleTag(tag, selectedStrengths, setSelectedStrengths)}
                                 className={cn(
-                                  "px-3 py-2 rounded-xl text-[10px] font-black border transition-all uppercase tracking-tighter",
+                                  "px-3 py-1.5 rounded-lg text-[9px] font-bold border transition-all uppercase tracking-tighter",
                                   selectedStrengths.includes(tag) 
-                                    ? "bg-emerald-600 text-white border-emerald-600 shadow-lg" 
-                                    : "bg-slate-50 text-slate-500 border-slate-200 hover:border-emerald-300"
+                                    ? "bg-emerald-600 text-white border-emerald-600 shadow-md scale-105" 
+                                    : "bg-white text-slate-500 border-slate-200 hover:border-emerald-300"
                                 )}
                               >{tag}</button>
                            ))}
                         </div>
-                      </div>
-                      <div className="space-y-6">
-                        <label className="text-[11px] font-black text-rose-600 uppercase tracking-widest block">GROWTH OPPORTUNITIES</label>
+                     </div>
+
+                     <div className="space-y-6">
+                        <label className="text-[10px] font-black text-rose-600 uppercase tracking-widest block border-b border-rose-100 pb-2">Opportunity Areas</label>
                         <div className="flex flex-wrap gap-2">
                            {GROWTH_TAGS.map(tag => (
                               <button 
                                 key={tag} 
                                 onClick={() => toggleTag(tag, selectedOpportunities, setSelectedOpportunities)}
                                 className={cn(
-                                  "px-3 py-2 rounded-xl text-[10px] font-black border transition-all uppercase tracking-tighter",
+                                  "px-3 py-1.5 rounded-lg text-[9px] font-bold border transition-all uppercase tracking-tighter",
                                   selectedOpportunities.includes(tag) 
-                                    ? "bg-rose-600 text-white border-rose-600 shadow-lg" 
-                                    : "bg-slate-50 text-slate-500 border-slate-200 hover:border-rose-300"
+                                    ? "bg-rose-600 text-white border-rose-600 shadow-md scale-105" 
+                                    : "bg-white text-slate-500 border-slate-200 hover:border-rose-300"
                                 )}
                               >{tag}</button>
                            ))}
                         </div>
-                      </div>
-                    </div>
+                     </div>
                   </div>
-                </div>
 
-                <div className="lg:col-span-4 space-y-8">
-                   
-                  <div className="bg-[#0f172a] p-10 rounded-[2.5rem] shadow-2xl text-white sticky top-0 border border-slate-800">
-                    <div className="space-y-8">
-                      
-                      <div className="space-y-3">
-                        <label className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] block">Frontline Tech</label>
-                        <select 
-                          className="w-full bg-slate-800 border border-slate-700 rounded-2xl p-5 text-sm font-bold outline-none focus:ring-2 focus:ring-blue-500 transition-all text-white"
-                          value={sessionFormData.repId} onChange={e => setSessionFormData({...sessionFormData, repId: e.target.value})}
-                        >
-                          <option value="">Select Tech...</option>
-                          {agents.map(a => <option key={a.id} value={a.id} className="text-slate-900">{a.name}</option>)}
-                        </select>
-                      </div>
+                  {/* Follow up Strategy */}
+                  <div className="space-y-8 pt-8 border-t border-slate-200">
+                     <h3 className="text-[11px] font-black text-slate-900 uppercase tracking-[0.25em] flex items-center gap-2">
+                       Progression Plan
+                     </h3>
 
-                      <div className="space-y-3">
-                        <label className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] block">Follow-up Due</label>
+                     <div className="space-y-4">
+                        <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest block">Follow-up Milestone</label>
                         <div className="relative group/cal">
                           <input 
                             type="text" 
-                            className="w-full bg-slate-800 border border-slate-700 rounded-2xl p-5 text-sm font-bold outline-none focus:ring-2 focus:ring-blue-500 transition-all text-white pr-12"
+                            className="w-full bg-white border border-slate-200 rounded-2xl p-4 text-sm font-bold outline-none focus:ring-4 focus:ring-blue-50 focus:border-blue-500 shadow-sm transition-all pr-12"
                             value={followUpDate} onChange={e => setFollowUpDate(e.target.value)}
+                            placeholder="Set date..."
                           />
-                          <Calendar className="absolute right-5 top-1/2 -translate-y-1/2 text-slate-500" size={20} />
+                          <Calendar className="absolute right-5 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
                         </div>
-                      </div>
+                     </div>
 
-                      <div className="pt-2 flex flex-col gap-3">
-                        <label className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] block ml-1">Performance Rating</label>
-                        <div className="grid grid-cols-1 gap-3">
-                           {RATINGS.map(item => (
-                             <button
-                               key={item.id}
-                               onClick={() => setRating(item.id)}
-                               className={cn(
-                                 "w-full py-5 px-6 rounded-2xl text-[11px] font-black text-left border-2 transition-all flex items-center justify-between group/row",
-                                 rating === item.id 
-                                  ? "bg-slate-800 text-white border-blue-500 shadow-xl shadow-blue-500/10" 
-                                  : "bg-slate-800/40 border-slate-700/50 text-slate-500 hover:bg-slate-800/60 hover:border-slate-600"
-                               )}
-                             >
-                               <div className="flex items-center gap-3">
-                                 <div className={cn(
-                                   "w-2 h-2 rounded-full",
-                                   rating === item.id ? "bg-blue-400" : "bg-slate-600 group-hover/row:bg-slate-400"
-                                 )}></div>
-                                 {item.label}
-                               </div>
-                               {rating === item.id && <CheckCircle2 size={16} className="text-blue-400" fill="currentColor" stroke="none" />}
-                             </button>
-                           ))}
-                        </div>
-                      </div>
+                     <div className="space-y-4">
+                        <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest block">Action Item Summary</label>
+                        <textarea 
+                          className="w-full bg-white border border-slate-200 rounded-2xl p-5 text-xs font-medium outline-none focus:ring-4 focus:ring-blue-50 focus:border-blue-500 shadow-sm transition-all min-h-[140px] leading-relaxed"
+                          placeholder="Specific, measurable actions for the tech..."
+                          value={actionItemsStr} onChange={e => setActionItemsStr(e.target.value)}
+                        />
+                     </div>
+                  </div>
 
-                      <div className="pt-6 flex flex-col gap-4">
-                        <button 
-                          onClick={handleSaveSession}
-                          className="w-full bg-blue-600 text-white rounded-[1.5rem] py-5 px-8 font-black flex items-center justify-center gap-4 hover:bg-blue-500 shadow-xl shadow-blue-500/20 active:scale-95 transition-all"
-                        >
-                          <Save size={20} />
-                          SUBMIT SESSION
-                        </button>
-                        <button onClick={() => setActiveModal(null)} className="text-[10px] font-black text-slate-500 uppercase tracking-[0.3em] hover:text-white transition-colors">DRAFT & EXIT</button>
-                      </div>
+                  {/* Submit Controls */}
+                  <div className="pt-6 space-y-4">
+                    <button 
+                      onClick={handleSaveSession}
+                      className="w-full bg-slate-900 text-white rounded-2xl py-5 px-8 font-black flex items-center justify-center gap-4 hover:bg-black shadow-2xl shadow-slate-300 active:scale-95 transition-all group"
+                    >
+                      <Save size={20} className="group-hover:text-blue-400 transition-colors" />
+                      SUBMIT COACHING LOG
+                    </button>
+                    <div className="text-center">
+                      <button onClick={() => setActiveModal(null)} className="text-[10px] font-extrabold text-slate-400 uppercase tracking-[0.3em] hover:text-slate-900 transition-colors">Discard Entry</button>
                     </div>
                   </div>
 
-                  <div className="bg-[#fff9e6] border border-amber-200 rounded-[2.5rem] p-10 relative">
-                      <div className="flex items-center gap-3 text-amber-900 mb-4">
-                         <div className="bg-amber-400 p-1 rounded-lg">
-                           <BadgeInfo size={18} strokeWidth={3} />
-                         </div>
-                         <span className="text-[11px] font-black uppercase tracking-widest pt-0.5">COMPLIANCE ALERT</span>
-                      </div>
-                      <p className="text-xs text-amber-800/80 font-bold leading-relaxed mb-4">
-                        This session will be synchronized to the SharePoint audit backend. Ensure STAR fields meet the mandatory 250-character descriptive minimum.
-                      </p>
+                  <div className="p-8 bg-blue-50 rounded-3xl border border-blue-100">
+                     <div className="flex items-start gap-4">
+                        <div className="bg-blue-600 p-1.5 rounded-lg text-white mt-1">
+                          <Sparkles size={16} />
+                        </div>
+                        <p className="text-[10px] text-blue-900/80 font-bold leading-relaxed">
+                          Submit this log to synchronize with the Unified Tech Dashboard. Coaching data influences the Quarterly Progression Matrix.
+                        </p>
+                     </div>
                   </div>
                 </div>
+
               </div>
             </div>
           </div>
