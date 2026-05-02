@@ -8,7 +8,6 @@ import {
 import { useStore } from '../contexts/StoreContext';
 import { Link } from 'react-router-dom';
 import { toast } from 'sonner';
-import { GoogleGenAI, Type } from "@google/genai";
 import { cn } from '../lib/utils';
 
 const COACHING_TYPES = [
@@ -37,7 +36,6 @@ export default function CoachingSessions() {
   const { agents, sessions, addSession, completeSession } = useStore();
   
   const [activeModal, setActiveModal] = useState<'schedule' | 'log' | 'complete' | null>(null);
-  const [isGeneratingAI, setIsGeneratingAI] = useState(false);
   
   const [editingSessionId, setEditingSessionId] = useState<string | null>(null);
   const [completeMode, setCompleteMode] = useState<'STAR' | 'FreeForm'>('STAR');
@@ -78,57 +76,6 @@ export default function CoachingSessions() {
       setList(list.filter(t => t !== tag));
     } else {
       setList([...list, tag]);
-    }
-  };
-
-  const handleSuggestSTARWithAI = async () => {
-    const sourceText = freeNotes || starLog.s || starLog.t || starLog.a || starLog.r;
-    if (!sourceText) {
-      toast.error("Please provide some initial notes or context first.");
-      return;
-    }
-
-    setIsGeneratingAI(true);
-    try {
-      const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
-      const prompt = `Convert the following loose coaching notes into a structured STAR (Situation, Task, Action, Result) format. Be concise and professional.
-      
-      Notes: ${sourceText}
-      
-      Return the response in JSON format.`;
-
-      const response = await ai.models.generateContent({
-        model: "gemini-3-flash-preview",
-        contents: prompt,
-        config: {
-          responseMimeType: "application/json",
-          responseSchema: {
-            type: Type.OBJECT,
-            properties: {
-              situation: { type: Type.STRING },
-              task: { type: Type.STRING },
-              action: { type: Type.STRING },
-              result: { type: Type.STRING }
-            },
-            required: ["situation", "task", "action", "result"]
-          }
-        }
-      });
-
-      const data = JSON.parse(response.text);
-      setStarLog({
-        s: data.situation,
-        t: data.task,
-        a: data.action,
-        r: data.result
-      });
-      setCompleteMode('STAR');
-      toast.success("AI suggestion applied!");
-    } catch (error) {
-      console.error(error);
-      toast.error("Failed to generate AI suggestion.");
-    } finally {
-      setIsGeneratingAI(false);
     }
   };
 
@@ -549,10 +496,6 @@ export default function CoachingSessions() {
                       <div className="space-y-4">
                         <div className="flex items-center justify-between mb-1">
                           <label className="text-xs font-black text-slate-800 uppercase tracking-widest">COMPREHENSIVE NOTES</label>
-                          <button onClick={handleSuggestSTARWithAI} disabled={isGeneratingAI} className="text-[10px] font-black text-blue-600 flex items-center gap-1.5 uppercase hover:scale-105 active:scale-95 transition-all">
-                             {isGeneratingAI ? <Loader2 className="animate-spin" size={14} /> : <Sparkles size={14} className="text-blue-400" />}
-                             AI CONVERSION
-                          </button>
                         </div>
                         <textarea 
                           className="w-full bg-white border border-slate-200 rounded-[2rem] p-8 text-sm font-medium outline-none focus:ring-4 focus:ring-blue-50 focus:border-blue-500 transition-all min-h-[400px] leading-relaxed shadow-inner"

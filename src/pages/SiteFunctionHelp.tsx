@@ -382,17 +382,17 @@ export default function SiteFunctionHelp() {
                 <LayoutDashboard size={300} />
              </div>
              <div className="relative z-10 max-w-xl text-center md:text-left">
-                <h2 className="text-4xl font-black mb-4 tracking-tighter leading-tight">Ready for Deployment?</h2>
+                <h2 className="text-4xl font-black mb-4 tracking-tighter leading-tight">Need further assistance?</h2>
                 <p className="text-lg text-blue-100 font-medium leading-relaxed">
-                   If you have reviewed the systems manual but still face functional blockers, our technical implementation desk is on standby for immediate troubleshooting.
+                   If you have reviewed the systems manual but still face functional blockers, please reach out via the internal ticketing portal or contact your local team lead.
                 </p>
              </div>
              <div className="relative z-10 flex flex-col gap-4 shrink-0">
                 <button className="px-10 py-5 bg-white text-blue-600 rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-blue-50 transition-all shadow-xl active:scale-95">
-                   Request Tech Call
+                   Internal Support Portal
                 </button>
                 <button className="px-10 py-5 bg-blue-700 text-white border border-blue-500 rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-blue-800 transition-all active:scale-95 flex items-center justify-center gap-2">
-                   Contact System Admin <ExternalLink size={16} />
+                   Submit Feedback
                 </button>
              </div>
           </div>

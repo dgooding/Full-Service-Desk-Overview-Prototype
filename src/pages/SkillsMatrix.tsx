@@ -198,7 +198,7 @@ export default function SkillsMatrix() {
             <div>
                <h3 className="text-xl font-bold mb-2">Matrix Synchronization Architecture</h3>
                <p className="text-slate-400 text-sm font-medium leading-relaxed">
-                  Competency scores are validated via monthly diagnostic assessments and automated ticket QA analysis. Tier 3 promotions require 
+                  Competency scores are validated via monthly diagnostic assessments and peer-review performance audits. Tier 3 promotions require 
                   Level 5 Expert status in at least 4 primary vectors.
                </p>
             </div>
