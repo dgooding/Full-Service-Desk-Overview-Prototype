@@ -13,6 +13,7 @@ import CoachingSessions from './pages/CoachingSessions';
 import SkillsMatrix from './pages/SkillsMatrix';
 import Settings from './pages/Settings';
 import Help from './pages/Help';
+import SiteFunctionHelp from './pages/SiteFunctionHelp';
 import { StoreProvider } from './contexts/StoreContext';
 import { Toaster } from 'sonner';
 
@@ -31,6 +32,7 @@ export default function App() {
             <Route path="skills" element={<SkillsMatrix />} />
             <Route path="settings" element={<Settings />} />
             <Route path="help" element={<Help />} />
+            <Route path="help/functions" element={<SiteFunctionHelp />} />
           </Route>
         </Routes>
       </BrowserRouter>

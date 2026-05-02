@@ -6,10 +6,13 @@ import { cn } from '../lib/utils';
 import { Link } from 'react-router-dom';
 import { toast } from 'sonner';
 
-function StatCard({ title, value, change, trend = "up", subtitle }: any) {
-  return (
-    <div className="bg-white p-5 rounded-2xl shadow-sm border border-slate-100 flex flex-col">
-      <div className="text-slate-500 text-sm font-medium mb-1">{title}</div>
+function StatCard({ title, value, change, trend = "up", subtitle, link }: any) {
+  const CardContent = (
+    <div className="bg-white p-5 rounded-2xl shadow-sm border border-slate-100 flex flex-col h-full hover:shadow-md hover:border-blue-100 transition-all group">
+      <div className="flex items-center justify-between mb-1">
+        <div className="text-slate-500 text-sm font-medium">{title}</div>
+        {link && <ArrowUpRight size={14} className="text-slate-300 group-hover:text-blue-500 transition-colors" />}
+      </div>
       <div className="flex items-end justify-between mt-1">
         <div className="text-3xl font-semibold tracking-tight">{value}</div>
         <div className={cn(
@@ -23,6 +26,12 @@ function StatCard({ title, value, change, trend = "up", subtitle }: any) {
       {subtitle && <div className="text-xs text-slate-400 mt-2">{subtitle}</div>}
     </div>
   );
+
+  if (link) {
+    return <Link to={link}>{CardContent}</Link>;
+  }
+
+  return CardContent;
 }
 
 export default function Dashboard() {
@@ -51,10 +60,38 @@ export default function Dashboard() {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        <StatCard title="Team CSAT" value={`${teamCsat}%`} change="+1.2%" trend="up" subtitle="Target: 90%" />
-        <StatCard title="Avg QA Score" value={teamQa} change="-2.1%" trend="down" subtitle="Target: 90" />
-        <StatCard title="Average Handle Time" value="7m 42s" change="-15s" trend="up" subtitle="Target: 8m 00s" />
-        <StatCard title="First Contact Res." value="76.0%" change="+3.4%" trend="up" subtitle="Target: 75%" />
+        <StatCard 
+          title="Team Roster" 
+          value={agents.length} 
+          change="+1" 
+          trend="up" 
+          subtitle="Managed Techs" 
+          link="/team"
+        />
+        <StatCard 
+          title="Team CSAT" 
+          value={`${teamCsat}%`} 
+          change="+1.2%" 
+          trend="up" 
+          subtitle="Target: 90%" 
+          link="/team"
+        />
+        <StatCard 
+          title="Avg QA Score" 
+          value={teamQa} 
+          change="-2.1%" 
+          trend="down" 
+          subtitle="Target: 90" 
+          link="/qa"
+        />
+        <StatCard 
+          title="Skills Coverage" 
+          value="84%" 
+          change="+5%" 
+          trend="up" 
+          subtitle="Competency Map" 
+          link="/skills"
+        />
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -79,7 +116,7 @@ export default function Dashboard() {
                 />
                 <Line type="monotone" dataKey="csat" name="CSAT %" stroke="#2563EB" strokeWidth={3} dot={{r: 4}} activeDot={{r: 6}} />
                 <Line type="monotone" dataKey="qa" name="QA Score" stroke="#10B981" strokeWidth={3} dot={{r: 4}} />
-                <Line type="dashed" dataKey="target" name="Target" stroke="#94A3B8" strokeWidth={2} strokeDasharray="5 5" dot={false} />
+                <Line type="monotone" dataKey="target" name="Target" stroke="#94A3B8" strokeWidth={2} strokeDasharray="5 5" dot={false} />
               </LineChart>
             </ResponsiveContainer>
           </div>
@@ -89,51 +126,67 @@ export default function Dashboard() {
         <div className="space-y-6">
           
           {/* Action Items / Coaching */}
-          <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
-            <h2 className="text-sm font-semibold text-slate-800 uppercase tracking-wider mb-4">Upcoming Sessions</h2>
-            <div className="space-y-4">
+          <div className="bg-white p-6 rounded-2xl shadow-lg shadow-slate-100 border border-slate-200">
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-xs font-bold text-slate-400 uppercase tracking-[0.2em]">Next Engagements</h2>
+              <Link to="/coaching" className="text-[10px] font-bold text-blue-600 uppercase tracking-widest hover:underline">Full Agenda</Link>
+            </div>
+            <div className="space-y-5">
               {sessions.filter(s => s.status === 'scheduled').slice(0, 3).map(session => (
-                <div key={session.id} className="flex gap-3 items-start">
-                  <div className="mt-0.5 p-2 bg-blue-50 text-blue-600 rounded-lg">
-                    <Clock size={16} />
+                <div key={session.id} className="flex gap-4 items-start group">
+                  <div className="mt-0.5 p-2 bg-slate-50 text-slate-400 rounded-xl group-hover:bg-blue-50 group-hover:text-blue-600 transition-colors">
+                    <Clock size={18} />
                   </div>
-                  <div>
-                    <div className="font-medium text-sm text-slate-900">{session.rep}</div>
-                    <div className="text-xs text-slate-500 mt-0.5">{session.type}</div>
-                    <div className="text-xs font-semibold text-blue-600 mt-1">{session.date}</div>
+                  <div className="flex-1 border-b border-slate-50 pb-3 group-last:border-0">
+                    <div className="font-bold text-sm text-slate-900 group-hover:text-blue-600 transition-colors">{session.rep}</div>
+                    <div className="text-[11px] text-slate-500 font-medium mb-1">{session.type}</div>
+                    <div className="inline-flex items-center gap-1 text-[10px] font-black text-blue-600 uppercase tracking-tighter bg-blue-50/50 px-2 py-0.5 rounded">
+                      <Clock size={10} />
+                      {session.date}
+                    </div>
                   </div>
                 </div>
               ))}
               {sessions.filter(s => s.status === 'scheduled').length === 0 && (
-                <div className="text-sm text-slate-500">No upcoming sessions.</div>
+                <div className="text-sm text-slate-500 italic py-4">No upcoming sessions.</div>
               )}
             </div>
-            <Link to="/coaching" className="block text-center w-full mt-5 py-2 text-sm font-medium text-slate-600 border border-slate-200 rounded-lg hover:bg-slate-50 transition-colors">
-              Schedule New 1-on-1
+            <Link to="/coaching" className="block text-center w-full mt-2 py-3 text-[11px] font-bold uppercase tracking-widest text-slate-500 border border-slate-200 rounded-xl hover:bg-slate-50 hover:text-slate-900 transition-all">
+              Initialize New Session
             </Link>
           </div>
 
           {/* Reps Needing Attention */}
-          <div className="bg-white p-6 rounded-2xl shadow-sm border border-rose-100 relative overflow-hidden">
-            <div className="absolute top-0 left-0 w-1 h-full bg-rose-500"></div>
-            <h2 className="text-sm font-semibold text-slate-800 flex items-center gap-2 mb-4">
-              <AlertCircle size={16} className="text-rose-500" />
-              Focus Areas
-            </h2>
+          <div className="bg-white p-6 rounded-2xl shadow-lg shadow-rose-100/20 border border-rose-100 relative overflow-hidden group/focus">
+            <div className="absolute top-0 left-0 w-1.5 h-full bg-rose-500"></div>
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-xs font-bold text-slate-800 flex items-center gap-2 uppercase tracking-widest">
+                <AlertCircle size={14} className="text-rose-500" />
+                Critical Focus
+              </h2>
+              <Link to="/team" className="text-[10px] font-bold text-rose-600 hover:rose-700 transition-colors flex items-center gap-0.5">
+                View Roster <ArrowUpRight size={10} />
+              </Link>
+            </div>
             <div className="space-y-3">
               {needsAttention.slice(0, 5).map(rep => (
-                <Link to={`/team/${rep.id}`} key={rep.id} className="flex items-center justify-between group">
-                  <div className="flex items-center gap-2">
-                    <img src={rep.avatar} alt="" className="w-6 h-6 rounded-full" />
-                    <span className="text-sm font-medium text-slate-700 group-hover:text-blue-600 transition-colors">{rep.name}</span>
+                <Link to={`/team/${rep.id}`} key={rep.id} className="flex items-center justify-between group p-2 -mx-2 rounded-xl hover:bg-rose-50/50 transition-colors border border-transparent hover:border-rose-100">
+                  <div className="flex items-center gap-3">
+                    <div className="relative">
+                      <img src={rep.avatar} alt="" className="w-8 h-8 rounded-full border-2 border-white shadow-sm" />
+                    </div>
+                    <div className="flex flex-col">
+                      <span className="text-sm font-bold text-slate-700 leading-none mb-1">{rep.name}</span>
+                      <span className="text-[9px] text-slate-400 font-bold uppercase tracking-tighter">Needs Assistance</span>
+                    </div>
                   </div>
-                  <div className="text-xs font-semibold text-rose-600 bg-rose-50 px-2 py-1 rounded">
-                    QA: {rep.metrics.qaScore}
+                  <div className="text-xs font-black tabular-nums text-rose-600 bg-rose-50 px-2 py-1 rounded-lg border border-rose-100">
+                    {rep.metrics.qaScore}
                   </div>
                 </Link>
               ))}
               {needsAttention.length === 0 && (
-                <div className="text-sm text-slate-500">All reps are meeting targets.</div>
+                <div className="text-sm text-slate-500 italic py-2">All assets performing within parameters.</div>
               )}
             </div>
           </div>
@@ -142,40 +195,48 @@ export default function Dashboard() {
       </div>
 
       {/* Recent QA Feed */}
-      <div className="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
-        <div className="px-6 py-5 border-b border-slate-100 flex items-center justify-between">
-          <h2 className="text-lg font-semibold text-slate-800">Recent Ticket QA</h2>
-          <Link to="/qa" className="text-sm text-blue-600 hover:text-blue-700 font-medium">View All</Link>
+      <div className="bg-white rounded-2xl shadow-lg shadow-slate-100 border border-slate-200 overflow-hidden group/qa">
+        <div className="px-6 py-5 border-b border-slate-100 flex items-center justify-between bg-slate-50/50">
+          <div>
+            <h2 className="text-lg font-bold text-slate-800 tracking-tight">Recent Performance Audits</h2>
+            <p className="text-xs text-slate-500 mt-0.5">Live feed of ticket evaluations and coaching feedback.</p>
+          </div>
+          <Link to="/qa" className="flex items-center gap-1.5 text-sm text-blue-600 hover:text-blue-700 font-bold uppercase tracking-wider group">
+            Audit Archive
+            <ArrowUpRight size={14} className="group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+          </Link>
         </div>
         <div className="divide-y divide-slate-100">
           {qaReviews.slice(0, 5).map(qa => (
-            <div key={qa.id} className="px-6 py-4 flex items-center hover:bg-slate-50 transition-colors">
+            <div key={qa.id} className="px-6 py-4 flex items-center hover:bg-slate-50/80 transition-colors">
               <div className="w-10">
-                 {qa.score >= 90 ? <CheckCircle2 className="text-emerald-500" size={20} /> : 
-                  qa.score >= 80 ? <AlertCircle className="text-amber-500" size={20} /> :
-                  <AlertCircle className="text-rose-500" size={20} />}
+                 {qa.score >= 90 ? <CheckCircle2 className="text-emerald-500" size={22} /> : 
+                  qa.score >= 80 ? <AlertCircle className="text-amber-500" size={22} /> :
+                  <AlertCircle className="text-rose-500" size={22} />}
               </div>
               <div className="flex-1">
-                <div className="flex items-center gap-2">
-                  <span className="font-semibold text-sm text-slate-900">{qa.repName || qa.rep}</span>
-                  <span className="text-xs text-slate-400">•</span>
-                  <span className="text-xs font-mono text-slate-500 bg-slate-100 px-1.5 rounded">{qa.ticket}</span>
+                <div className="flex items-center gap-3">
+                  <span className="font-bold text-sm text-slate-900">{qa.repName || qa.rep}</span>
+                  <span className="text-[10px] font-mono text-slate-400 border border-slate-200 px-1.5 py-0.5 rounded tracking-tighter uppercase">{qa.ticket}</span>
                 </div>
-                <div className="text-xs text-slate-500 mt-1">Reviewed on {qa.date}</div>
+                <div className="text-[11px] text-slate-400 mt-1 font-medium italic">Evaluated on {qa.date} by {qa.reviewer || 'System'}</div>
               </div>
               <div className="text-right">
                 <div className={cn(
-                  "text-lg font-bold",
+                  "text-xl font-black tabular-nums tracking-tighter",
                   qa.score >= 90 ? "text-emerald-600" :
                   qa.score >= 80 ? "text-amber-600" : "text-rose-600"
                 )}>
                   {qa.score}
                 </div>
+                <div className="text-[9px] font-bold text-slate-400 tracking-widest uppercase">Score</div>
               </div>
             </div>
           ))}
           {qaReviews.length === 0 && (
-            <div className="px-6 py-4 text-sm text-slate-500">No recent QA reviews.</div>
+            <div className="px-6 py-8 text-center text-slate-500 italic font-serif">
+              No recent audit data available.
+            </div>
           )}
         </div>
       </div>

@@ -1,7 +1,9 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { teamMembers as initialAgents, recentQA as initialQA, upcomingSessions as initialSessions, performanceData, initialGoals, initialNotes } from '../lib/mockData';
 
-export type Agent = typeof initialAgents[0];
+export type Agent = typeof initialAgents[0] & {
+  skills?: Record<string, number>;
+};
 export type QAReview = {
   id: string;
   repId: string;
@@ -14,7 +16,15 @@ export type QAReview = {
   details?: Record<string, number>;
   notes?: string;
 };
-export type CoachingSession = typeof initialSessions[0] & { notes?: string, actionItems?: string[] };
+export type CoachingSession = typeof initialSessions[0] & { 
+  notes?: string; 
+  actionItems?: string[]; 
+  followUpNotes?: string;
+  rating?: 'EXCEEDS' | 'MEETS' | 'NEEDS IMPROVEMENT' | 'DOES NOT MEET';
+  strengths?: string[];
+  growthOpportunities?: string[];
+  interactionRef?: string;
+};
 
 export type Goal = typeof initialGoals[0];
 export type Note = typeof initialNotes[0];
@@ -28,6 +38,7 @@ interface StoreContextType {
   notes: Note[];
   addAgent: (agent: Omit<Agent, 'id'>) => void;
   updateAgentStatus: (id: string, status: Agent['status']) => void;
+  updateAgentSkill: (id: string, skill: string, level: number) => void;
   addQAReview: (review: Omit<QAReview, 'id' | 'date'>) => void;
   addSession: (session: Omit<CoachingSession, 'id'>) => void;
   completeSession: (id: string, updates: Partial<CoachingSession>) => void;
@@ -43,6 +54,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
   const [qaReviews, setQaReviews] = useState<QAReview[]>(
     initialQA.map(qa => ({
       ...qa,
+      repName: qa.rep,
       repId: initialAgents.find(a => a.name === qa.rep)?.id || 'rep-001'
     })) as QAReview[]
   );
@@ -104,6 +116,16 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     setAgents(prev => prev.map(a => a.id === id ? { ...a, status } : a));
   };
 
+  const updateAgentSkill = (id: string, skill: string, level: number) => {
+    setAgents(prev => prev.map(a => {
+      if (a.id === id) {
+        const currentSkills = a.skills || {};
+        return { ...a, skills: { ...currentSkills, [skill]: level } };
+      }
+      return a;
+    }));
+  };
+
   const addQAReview = (review: Omit<QAReview, 'id' | 'date'>) => {
     const id = `QA-${Date.now()}`;
     const date = new Date().toISOString().split('T')[0];
@@ -137,7 +159,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
   return (
     <StoreContext.Provider value={{
       agents, qaReviews, sessions, performance, goals, notes,
-      addAgent, updateAgentStatus, addQAReview, addSession, completeSession,
+      addAgent, updateAgentStatus, updateAgentSkill, addQAReview, addSession, completeSession,
       addGoal, updateGoalStatus, addNote
     }}>
       {children}

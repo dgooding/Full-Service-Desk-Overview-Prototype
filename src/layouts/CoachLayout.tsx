@@ -44,6 +44,7 @@ export default function CoachLayout() {
     if (path === '/coaching') return 'Coaching Sessions';
     if (path === '/settings') return 'Settings';
     if (path === '/help') return 'Integration Help';
+    if (path === '/help/functions') return 'Site Function Help';
     return 'Dashboard';
   };
 
@@ -112,13 +113,26 @@ export default function CoachLayout() {
                 className={({ isActive }) => cn(
                   "flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors",
                   isActive 
-                    ? "bg-slate-100 text-slate-900" 
+                    ? "bg-slate-100 text-slate-900 font-bold" 
                     : "text-slate-600 hover:bg-slate-50 hover:text-slate-900"
                 )}
                 onClick={() => setMobileMenuOpen(false)}
               >
                 <HelpCircle size={18} className="opacity-80" />
                 Integration Help
+              </NavLink>
+              
+              <NavLink
+                to="/help/functions"
+                className={({ isActive }) => cn(
+                  "flex items-center gap-3 px-10 py-2 rounded-lg text-xs font-semibold transition-colors",
+                  isActive 
+                    ? "text-blue-600 bg-blue-50/50" 
+                    : "text-slate-500 hover:text-slate-700 hover:bg-slate-50"
+                )}
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                Site Function Help
               </NavLink>
             </nav>
           </div>

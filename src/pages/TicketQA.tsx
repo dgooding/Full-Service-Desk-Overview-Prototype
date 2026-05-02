@@ -46,7 +46,7 @@ export default function TicketQA() {
     documentation: 20
   });
   
-  const totalScore = Object.values(scores).reduce((a, b) => a + (b || 0), 0);
+  const totalScore = (Object.values(scores) as number[]).reduce((a, b) => a + (b || 0), 0);
 
   const handleSubmit = () => {
     if (!selectedRepId || !ticketNumber) {
