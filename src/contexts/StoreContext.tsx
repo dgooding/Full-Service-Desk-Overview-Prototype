@@ -1,9 +1,16 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import { teamMembers as initialAgents, recentQA as initialQA, upcomingSessions as initialSessions, performanceData, initialGoals, initialNotes } from '../lib/mockData';
+import { 
+  teamMembers as initialAgents, 
+  recentQA as initialQA, 
+  performanceData, 
+  initialGoals, 
+  initialNotes 
+} from '../lib/mockData';
 
 export type Agent = typeof initialAgents[0] & {
   skills?: Record<string, number>;
 };
+
 export type QAReview = {
   id: string;
   repId: string;
@@ -12,19 +19,10 @@ export type QAReview = {
   score: number;
   date: string;
   reviewer: string;
-  status: 'draft' | 'completed';
+  status: 'draft' | 'completed' | 'needs_review';
   details?: Record<string, number>;
   categoryNotes?: Record<string, string>;
   notes?: string;
-};
-export type CoachingSession = typeof initialSessions[0] & { 
-  notes?: string; 
-  actionItems?: string[]; 
-  followUpNotes?: string;
-  rating?: 'EXCEEDS' | 'MEETS' | 'NEEDS IMPROVEMENT' | 'DOES NOT MEET';
-  strengths?: string[];
-  growthOpportunities?: string[];
-  interactionRef?: string;
 };
 
 export type Goal = typeof initialGoals[0];
@@ -33,21 +31,19 @@ export type Note = typeof initialNotes[0];
 interface StoreContextType {
   agents: Agent[];
   qaReviews: QAReview[];
-  sessions: CoachingSession[];
   performance: typeof performanceData;
   goals: Goal[];
   notes: Note[];
+  focusMode: boolean;
+  
+  setFocusMode: (val: boolean) => void;
   addAgent: (agent: Omit<Agent, 'id'>) => void;
   updateAgentStatus: (id: string, status: Agent['status']) => void;
   updateAgentSkill: (id: string, skill: string, level: number) => void;
   addQAReview: (review: Omit<QAReview, 'id' | 'date'>) => void;
-  addSession: (session: Omit<CoachingSession, 'id'>) => void;
-  completeSession: (id: string, updates: Partial<CoachingSession>) => void;
   addGoal: (goal: Omit<Goal, 'id'>) => void;
   updateGoalStatus: (id: string, status: string, progressValue: number) => void;
   addNote: (note: Omit<Note, 'id' | 'date' | 'author'>) => void;
-  focusMode: boolean;
-  setFocusMode: (val: boolean) => void;
 }
 
 const StoreContext = createContext<StoreContextType | undefined>(undefined);
@@ -58,31 +54,27 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     initialQA.map(qa => ({
       ...qa,
       repName: qa.rep,
-      repId: initialAgents.find(a => a.name === qa.rep)?.id || 'rep-001'
+      repId: initialAgents.find(a => a.name === qa.rep)?.id || 'rep-001',
+      status: qa.status as QAReview['status']
     })) as QAReview[]
-  );
-  const [sessions, setSessions] = useState<CoachingSession[]>(
-    initialSessions.map(s => ({
-      ...s,
-      repId: initialAgents.find(a => a.name === s.rep)?.id || 'rep-001'
-    })) as CoachingSession[]
   );
   const [performance, setPerformance] = useState(performanceData);
   const [goals, setGoals] = useState<Goal[]>(initialGoals);
   const [notes, setNotes] = useState<Note[]>(initialNotes);
   const [focusMode, setFocusMode] = useState(false);
 
+  // Persistence
   useEffect(() => {
-    const savedData = localStorage.getItem('coachapp_data');
+    const savedData = localStorage.getItem('leadcoach_v4_data');
     if (savedData) {
       try {
         const parsed = JSON.parse(savedData);
         if (parsed.agents) setAgents(parsed.agents);
         if (parsed.qaReviews) setQaReviews(parsed.qaReviews);
-        if (parsed.sessions) setSessions(parsed.sessions);
         if (parsed.performance) setPerformance(parsed.performance);
         if (parsed.goals) setGoals(parsed.goals);
         if (parsed.notes) setNotes(parsed.notes);
+        if (parsed.focusMode !== undefined) setFocusMode(parsed.focusMode);
       } catch (e) {
         console.error("Failed to parse saved data");
       }
@@ -90,15 +82,15 @@ export function StoreProvider({ children }: { children: ReactNode }) {
   }, []);
 
   useEffect(() => {
-    localStorage.setItem('coachapp_data', JSON.stringify({
-      agents, qaReviews, sessions, performance, goals, notes, focusMode
+    localStorage.setItem('leadcoach_v4_data', JSON.stringify({
+      agents, qaReviews, performance, goals, notes, focusMode
     }));
-  }, [agents, qaReviews, sessions, performance, goals, notes, focusMode]);
+  }, [agents, qaReviews, performance, goals, notes, focusMode]);
 
   // Derived calculations: Update agent QA score based on reviews
   useEffect(() => {
     setAgents(prev => prev.map(agent => {
-      const repReviews = qaReviews.filter(qa => qa.repId === agent.id);
+      const repReviews = qaReviews.filter(qa => qa.repId === agent.id && qa.status === 'completed');
       if (repReviews.length === 0) return agent;
       const avgScore = Math.round(repReviews.reduce((sum, r) => sum + r.score, 0) / repReviews.length);
       return {
@@ -133,16 +125,28 @@ export function StoreProvider({ children }: { children: ReactNode }) {
   const addQAReview = (review: Omit<QAReview, 'id' | 'date'>) => {
     const id = `QA-${Date.now()}`;
     const date = new Date().toISOString().split('T')[0];
-    setQaReviews(prev => [{ ...review, id, date }, ...prev]);
-  };
-
-  const addSession = (session: Omit<CoachingSession, 'id'>) => {
-    const id = `sess-${Date.now()}`;
-    setSessions(prev => [...prev, { ...session, id }]);
-  };
-
-  const completeSession = (id: string, updates: Partial<CoachingSession>) => {
-    setSessions(prev => prev.map(s => s.id === id ? { ...s, status: 'completed', date: new Date().toLocaleDateString(), ...updates } : s));
+    
+    setQaReviews(prev => {
+      const newReviews = [{ ...review, id, date }, ...prev];
+      
+      // Update the agent's average QA score based on all their reviews
+      setAgents(agentsPrev => agentsPrev.map(a => {
+        if (a.id === review.repId) {
+          const agentQAs = newReviews.filter(r => r.repId === a.id);
+          const newAvg = Math.round(agentQAs.reduce((sum, r) => sum + r.score, 0) / agentQAs.length);
+          return {
+            ...a,
+            metrics: {
+              ...a.metrics,
+              qaScore: newAvg
+            }
+          };
+        }
+        return a;
+      }));
+      
+      return newReviews;
+    });
   };
 
   const addGoal = (goal: Omit<Goal, 'id'>) => {
@@ -157,14 +161,14 @@ export function StoreProvider({ children }: { children: ReactNode }) {
   const addNote = (note: Omit<Note, 'id' | 'date' | 'author'>) => {
     const id = `note-${Date.now()}`;
     const date = new Date().toISOString().split('T')[0];
-    setNotes(prev => [...prev, { ...note, id, date, author: "Coach Dan" }]);
+    setNotes(prev => [...prev, { ...note, id, date, author: "Coach Daniel" }]);
   };
 
   return (
     <StoreContext.Provider value={{
-      agents, qaReviews, sessions, performance, goals, notes, focusMode,
-      addAgent, updateAgentStatus, updateAgentSkill, addQAReview, addSession, completeSession,
-      addGoal, updateGoalStatus, addNote, setFocusMode
+      agents, qaReviews, performance, goals, notes, focusMode,
+      setFocusMode, addAgent, updateAgentStatus, updateAgentSkill, addQAReview,
+      addGoal, updateGoalStatus, addNote
     }}>
       {children}
     </StoreContext.Provider>

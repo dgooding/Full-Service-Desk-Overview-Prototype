@@ -72,23 +72,31 @@ export const teamMembers = [
 ];
 
 export const performanceData = [
-  { month: "Jan", csat: 88, qa: 85, target: 90 },
-  { month: "Feb", csat: 89, qa: 86, target: 90 },
-  { month: "Mar", csat: 91, qa: 88, target: 90 },
-  { month: "Apr", csat: 90, qa: 91, target: 90 },
-  { month: "May", csat: 93, qa: 94, target: 90 },
-  { month: "Jun", csat: 95, qa: 93, target: 90 },
+  { month: "Jan", csat: 88, qa: 85, coachingHours: 12, target: 90 },
+  { month: "Feb", csat: 89, qa: 86, coachingHours: 18, target: 90 },
+  { month: "Mar", csat: 91, qa: 88, coachingHours: 35, target: 90 },
+  { month: "Apr", csat: 90, qa: 91, coachingHours: 42, target: 90 },
+  { month: "May", csat: 93, qa: 94, coachingHours: 38, target: 90 },
+  { month: "Jun", csat: 95, qa: 96, coachingHours: 45, target: 90 },
 ];
 
 export const recentQA = [
-  { id: "QA-1004", rep: "Marcus Green", ticket: "INC128945", score: 72, date: "2023-11-02", reviewer: "Coach Dan", status: "needs_review" },
-  { id: "QA-1005", rep: "Alex Johnson", ticket: "INC129001", score: 96, date: "2023-11-01", reviewer: "Coach Dan", status: "completed" },
-  { id: "QA-1006", rep: "Priya Patel", ticket: "REQ094421", score: 84, date: "2023-10-31", reviewer: "Coach Dan", status: "completed" },
-];
-
-export const upcomingSessions = [
-  { id: "sess-1", rep: "Marcus Green", type: "Performance Review", date: "Today, 2:00 PM", status: "scheduled" },
-  { id: "sess-2", rep: "Samantha Lee", type: "Career Development", date: "Tomorrow, 10:30 AM", status: "scheduled" },
+  { 
+    id: "QA-1004", rep: "Marcus Green", ticket: "INC128945", score: 72, date: "2023-11-02", reviewer: "Coach Dan", status: "needs_review",
+    details: { opening: 80, authenticating: 100, listening: 60, technical: 75, closing: 60, logging: 50 },
+    categoryNotes: { opening: "A bit rushed but covered all points.", listening: "Interrupted the customer twice.", technical: "Missed the secondary reboot step.", logging: "Did not categorize correctly in ServiceNow." },
+    notes: "Marcus sounded very rushed during this interaction. Failed to properly acknowledge the user's frustration regarding the recurring software crash. Needs coaching on active listening and empathy markers."
+  },
+  { 
+    id: "QA-1005", rep: "Alex Johnson", ticket: "INC129001", score: 96, date: "2023-11-01", reviewer: "Coach Dan", status: "completed",
+    details: { opening: 100, authenticating: 100, listening: 100, technical: 95, closing: 90, logging: 100 },
+    notes: "Excellent call. Alex handled the escalated billing issue perfectly, verified identity swiftly, and provided a comprehensive explanation of the prorated charges."
+  },
+  { 
+    id: "QA-1006", rep: "Priya Patel", ticket: "REQ094421", score: 84, date: "2023-10-31", reviewer: "Coach Dan", status: "completed",
+    details: { opening: 90, authenticating: 100, listening: 90, technical: 80, closing: 85, logging: 90 },
+    notes: "Good overall interaction handling the hardware request. Could have offered more proactive suggestions regarding the shipping timeline, but all technical requirements were met."
+  },
 ];
 
 export const initialGoals = [

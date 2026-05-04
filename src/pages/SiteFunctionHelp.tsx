@@ -1,434 +1,149 @@
 import React from 'react';
 import { 
-  ChevronRight, 
+  ArrowLeft, 
+  HelpCircle, 
+  CheckCircle2, 
   LayoutDashboard, 
   Users, 
-  Award, 
-  CheckCircle, 
-  MessageSquare, 
-  Settings, 
-  Info,
-  ExternalLink,
-  ShieldCheck,
-  BookOpen,
-  FileText,
-  MousePointer2,
-  List,
+  CheckSquare, 
+  TrendingUp,
   Target,
-  TrendingUp
+  Maximize2,
+  Info,
+  ChevronDown
 } from 'lucide-react';
-import { motion } from 'motion/react';
 import { cn } from '../lib/utils';
+import { motion } from 'motion/react';
+import { Link } from 'react-router-dom';
 
-interface AnnotationProps {
-  number: number;
-  title: string;
-  description: string;
-  position: { top?: string; left?: string; right?: string; bottom?: string };
-}
-
-const DASHBOARD_ANNOTATIONS: AnnotationProps[] = [
-  { 
-    number: 1, 
-    title: "Sidebar Navigation", 
-    description: "Main menu to switch between all sections of the app.",
-    position: { top: '35%', left: '4%' }
-  },
-  { 
-    number: 2, 
-    title: "Live Sync Indicator", 
-    description: "Shows real-time data syncing is active.",
-    position: { top: '6%', left: '22%' }
-  },
-  { 
-    number: 3, 
-    title: "KPI Cards", 
-    description: "Current performance metrics with trend arrows and targets. Green = positive change.",
-    position: { top: '18%', left: '45%' }
-  },
-  { 
-    number: 4, 
-    title: "CSAT vs QA Score Trend Graph", 
-    description: "6-month historical comparison of customer satisfaction and quality scores.",
-    position: { top: '55%', left: '40%' }
-  },
-  { 
-    number: 5, 
-    title: "Next Engagements", 
-    description: "Upcoming coaching sessions, reviews, and quick 'Initialize New Session' action.",
-    position: { top: '30%', right: '8%' }
-  },
-  { 
-    number: 6, 
-    title: "Critical Focus", 
-    description: "Agents who need immediate coaching attention with their current scores.",
-    position: { top: '65%', right: '8%' }
-  },
-  { 
-    number: 7, 
-    title: "Recent Performance Audits", 
-    description: "Live feed of recent evaluations and feedback.",
-    position: { bottom: '10%', left: '40%' }
-  },
-  { 
-    number: 8, 
-    title: "User Profile", 
-    description: "Current coach's information at the bottom.",
-    position: { bottom: '6%', left: '5%' }
-  },
-];
-
-const SECTIONS = [
-  { id: 'introduction', label: 'Platform Introduction', icon: BookOpen },
-  { id: 'dashboard', label: 'Dashboard Systems', icon: LayoutDashboard },
-  { id: 'team', label: 'Team Management', icon: Users },
-  { id: 'skills', label: 'Competency Framework', icon: Award },
-  { id: 'qa', label: 'Quality Assurance', icon: CheckCircle },
-  { id: 'coaching', label: 'Impact Coaching', icon: MessageSquare },
-];
+const FunctionSection = ({ id, icon: Icon, title, description, children }: any) => (
+  <motion.div 
+    id={id}
+    initial={{ opacity: 0, y: 20 }}
+    whileInView={{ opacity: 1, y: 0 }}
+    viewport={{ once: true }}
+    className="bg-white p-8 rounded-[2.5rem] border border-slate-200 shadow-sm space-y-6"
+  >
+    <div className="flex items-center gap-4">
+      <div className="p-3 bg-brand-50 text-brand-600 rounded-2xl">
+        <Icon size={28} />
+      </div>
+      <div>
+        <h2 className="text-2xl font-black text-slate-800 tracking-tight leading-none mb-1">{title}</h2>
+        <p className="text-xs font-bold text-slate-400 uppercase tracking-widest">{description}</p>
+      </div>
+    </div>
+    <div className="prose prose-slate max-w-none prose-sm text-slate-600 font-medium leading-loose">
+      {children}
+    </div>
+  </motion.div>
+);
 
 export default function SiteFunctionHelp() {
-  const scrollToSection = (id: string) => {
-    const element = document.getElementById(id);
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
-    }
-  };
-
   return (
-    <div className="max-w-7xl mx-auto pb-32 animate-in fade-in duration-700">
-      <div className="flex flex-col lg:flex-row gap-16">
-        
-        {/* Sticky Local Navigation */}
-        <aside className="w-full lg:w-72 shrink-0">
-          <div className="sticky top-8 space-y-8">
-            <div>
-              <div className="flex items-center gap-3 mb-4">
-                 <div className="w-8 h-8 rounded-lg bg-blue-600 flex items-center justify-center text-white font-black shadow-lg shadow-blue-500/20">LC</div>
-                 <span className="text-[11px] font-black text-slate-400 uppercase tracking-[0.4em]">Operations Manual</span>
-              </div>
-              <h2 className="text-xl font-black text-slate-900 tracking-tight mb-6">Documentation Index</h2>
-              <nav className="space-y-1">
-                {SECTIONS.map((section) => (
-                  <button
-                    key={section.id}
-                    onClick={() => scrollToSection(section.id)}
-                    className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-bold text-slate-500 hover:text-blue-600 hover:bg-blue-50 transition-all border border-transparent hover:border-blue-100 group"
-                  >
-                    <section.icon size={18} className="text-slate-300 group-hover:text-blue-500 transition-colors" />
-                    {section.label}
-                  </button>
-                ))}
-              </nav>
+    <div className="space-y-12 pb-20 max-w-4xl mx-auto">
+      <div className="flex items-center justify-between gap-4">
+        <Link to="/help" className="flex items-center gap-2 p-2 px-4 bg-white border border-slate-200 rounded-xl text-xs font-bold text-slate-500 hover:text-brand-600 transition-all hover:shadow-sm">
+          <ArrowLeft size={14} />
+          Back to Center
+        </Link>
+        <div className="flex items-center gap-2 px-3 py-1 bg-amber-50 text-amber-600 rounded-full border border-amber-100 text-[10px] font-black uppercase tracking-widest">
+          Function Deep-Dive
+        </div>
+      </div>
+
+      <header className="space-y-4">
+        <h1 className="text-5xl font-black text-slate-900 tracking-tighter">Site Function Guide</h1>
+        <p className="text-slate-500 font-medium text-lg">A technical guide to every blueprint and circuit in the LeadCoach environment.</p>
+      </header>
+
+      <div className="sticky top-4 z-[45] bg-white/80 backdrop-blur-md p-3 border border-slate-200 rounded-2xl shadow-xl flex items-center gap-2 overflow-x-auto no-scrollbar scroll-smooth">
+        <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest px-3">Go to:</span>
+        <button onClick={() => document.getElementById('dash')?.scrollIntoView({ behavior: 'smooth' })} className="px-4 py-2 bg-slate-50 hover:bg-brand-50 text-slate-600 hover:text-brand-600 rounded-xl text-xs font-bold transition-all whitespace-nowrap">Dashboard</button>
+        <button onClick={() => document.getElementById('focus')?.scrollIntoView({ behavior: 'smooth' })} className="px-4 py-2 bg-slate-50 hover:bg-brand-50 text-slate-600 hover:text-brand-600 rounded-xl text-xs font-bold transition-all whitespace-nowrap">Focus Mode</button>
+        <button onClick={() => document.getElementById('team')?.scrollIntoView({ behavior: 'smooth' })} className="px-4 py-2 bg-slate-50 hover:bg-brand-50 text-slate-600 hover:text-brand-600 rounded-xl text-xs font-bold transition-all whitespace-nowrap">Team Ops</button>
+        <button onClick={() => document.getElementById('qa')?.scrollIntoView({ behavior: 'smooth' })} className="px-4 py-2 bg-slate-50 hover:bg-brand-50 text-slate-600 hover:text-brand-600 rounded-xl text-xs font-bold transition-all whitespace-nowrap">QA Audit</button>
+        <button onClick={() => document.getElementById('skills')?.scrollIntoView({ behavior: 'smooth' })} className="px-4 py-2 bg-slate-50 hover:bg-brand-50 text-slate-600 hover:text-brand-600 rounded-xl text-xs font-bold transition-all whitespace-nowrap">Matrix</button>
+      </div>
+
+      <div className="space-y-12">
+        <FunctionSection id="dash" icon={LayoutDashboard} title="Command Center" description="Overview Intelligence Dashboard">
+          <p>
+            The Command Center provides a real-time HUD of four principal performance indices: Team Strength, Quality Index, Coach Backlog, and Critical Alerts.
+          </p>
+          <ul className="grid grid-cols-1 md:grid-cols-2 gap-4 list-none p-0">
+            <li className="bg-slate-50 p-4 rounded-2xl border border-white flex gap-3">
+              <TrendingUp className="text-brand-600 shrink-0" size={18} />
+              <span>Velocity chart displays MO-Mo Quality Index trends vs enterprise benchmarks.</span>
+            </li>
+            <li className="bg-slate-50 p-4 rounded-2xl border border-white flex gap-3">
+              <CheckCircle2 className="text-emerald-600 shrink-0" size={18} />
+              <span>Priority Matrix automatically surfaces reps with sub-80% quality scores for intervention.</span>
+            </li>
+          </ul>
+        </FunctionSection>
+
+        <FunctionSection id="focus" icon={Maximize2} title="Command Focus Mode" description="Performance Optimization HUD">
+          <p>
+            Focus Mode (accessed via Header Toggle) reduces interface noise to concentrate on live data. The sidebar collapses, animations accelerate, and grids become higher-density.
+          </p>
+          <div className="bg-slate-900 p-6 rounded-3xl text-white flex gap-6 items-center">
+            <div className="shrink-0 w-12 h-12 rounded-xl bg-white/10 flex items-center justify-center">
+              <Info size={24} className="text-brand-400" />
             </div>
-
-            <div className="p-6 bg-slate-900 rounded-3xl text-white">
-              <div className="flex items-center gap-2 mb-3">
-                <Info size={16} className="text-blue-400" />
-                <span className="text-[10px] font-black uppercase tracking-widest text-slate-400">Version 2.4.0</span>
-              </div>
-              <p className="text-xs text-slate-300 font-medium leading-relaxed mb-4">
-                This document contains confidential operational procedures for the LeadCoach platform.
-              </p>
-              <button className="w-full px-4 py-2 bg-slate-800 hover:bg-slate-700 rounded-xl text-[10px] font-black uppercase tracking-widest transition-colors">
-                Print for Training
-              </button>
-            </div>
-          </div>
-        </aside>
-
-        {/* Main Content Area */}
-        <main className="flex-1 min-w-0">
-          {/* Breadcrumb */}
-          <nav className="flex items-center gap-2 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-8">
-            <span>Library</span>
-            <ChevronRight size={10} strokeWidth={3} />
-            <span>Operational Guides</span>
-            <ChevronRight size={10} strokeWidth={3} />
-            <span className="text-blue-600">Site Function Manual</span>
-          </nav>
-
-          {/* Hero Section */}
-          <div className="mb-20">
-            <h1 className="text-6xl font-black text-slate-900 tracking-tighter mb-6 leading-[0.9]">
-              LeadCoach <br />
-              <span className="text-blue-600">Operations Manual</span>
-            </h1>
-            <p className="text-xl text-slate-500 font-medium max-w-2xl leading-relaxed">
-              This comprehensive technical document outlines the workflow, interface logic, and performance systems of the LeadCoach dashboard.
+            <p className="text-sm font-medium leading-relaxed">
+              Recommended for full-screen monitoring during peak ticket volume or live coaching sessions where context-switching must be minimized.
             </p>
           </div>
+        </FunctionSection>
 
-          <div className="space-y-32">
-            {/* Section: FAQ Accordions */}
-            <section id="faq" className="scroll-mt-8">
-              <div className="flex items-center gap-3 mb-6">
-                <div className="px-3 py-1 bg-blue-100 text-blue-600 rounded-full text-[10px] font-black uppercase tracking-widest">Chapter 00</div>
-                <div className="h-px flex-1 bg-slate-100"></div>
-              </div>
-              <h2 className="text-3xl font-black text-slate-900 tracking-tight mb-8">Frequent Operational Procedures</h2>
-              
-              <div className="space-y-4">
-                {[
-                  { q: "How do I initialize a new coaching session?", a: "Navigate to the 'Coaching' section in the sidebar. Click the 'Initialize Session' button. You can then select an agent and fill out the STAR log or free-form notes. Once complete, click 'Finalize Session' to commit it to the agent's history." },
-                  { q: "What defines an 'Expert' level in the Skills Matrix?", a: "Level 5 (Expert) is reserved for Subject Matter Experts (SMEs). To achieve this, an agent must demonstrate 100% technical accuracy across at least 50 reviewed tickets within a specific category and have peer-review verification." },
-                  { q: "How are the Dashboard KPIs calculated?", a: "KPIs are aggregated in real-time from the underlying QA Reviews and ticket performance data. CSAT is pulled from customer feedback loops, while QA Score is the average of all finalized evaluations in the current trailing 30-day window." },
-                  { q: "Can I delete a finalized QA Review?", a: "For audit integrity, finalized reviews cannot be deleted by standard coach accounts. If a correction is needed, please contact the Quality Lead or System Administrator to initiate a record reversal." }
-                ].map((faq, i) => (
-                  <details key={i} className="group bg-white border border-slate-200 rounded-[2rem] overflow-hidden shadow-sm transition-all hover:border-blue-200">
-                    <summary className="list-none flex items-center justify-between p-8 cursor-pointer select-none">
-                      <span className="text-sm font-black text-slate-900 uppercase tracking-tight">{faq.q}</span>
-                      <div className="w-8 h-8 rounded-full bg-slate-50 flex items-center justify-center text-slate-400 group-open:bg-blue-600 group-open:text-white transition-all group-open:rotate-180">
-                        <ChevronDown size={18} strokeWidth={3} />
-                      </div>
-                    </summary>
-                    <div className="px-8 pb-8 animate-in slide-in-from-top-2 duration-300">
-                      <p className="text-sm text-slate-500 font-medium leading-relaxed pl-4 border-l-2 border-blue-100">
-                        {faq.a}
-                      </p>
-                    </div>
-                  </details>
-                ))}
-              </div>
-            </section>
-
-            {/* Section: Introduction */}
-            <section id="introduction" className="scroll-mt-8">
-              <div className="flex items-center gap-3 mb-6">
-                <div className="px-3 py-1 bg-blue-100 text-blue-600 rounded-full text-[10px] font-black uppercase tracking-widest">Chapter 01</div>
-                <div className="h-px flex-1 bg-slate-100"></div>
-              </div>
-              <h2 className="text-3xl font-black text-slate-900 tracking-tight mb-8">Platform Introduction</h2>
-              <div className="prose prose-slate max-w-none">
-                <p className="text-lg text-slate-600 leading-relaxed font-medium mb-6">
-                  LeadCoach is a sophisticated performance orchestration engine designed for high-velocity customer experience teams. The platform bridges the gap between raw ticket data and human behavioral change through three core pillars:
-                </p>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 not-prose">
-                  <div className="p-8 bg-white border border-slate-200 rounded-3xl shadow-sm">
-                    <TrendingUp size={32} className="text-blue-600 mb-6" />
-                    <h3 className="text-lg font-black text-slate-900 mb-2 uppercase tracking-tight">Visibility</h3>
-                    <p className="text-sm text-slate-500 font-medium leading-relaxed">Real-time KPI aggregation and trend analysis across all team tiers.</p>
-                  </div>
-                  <div className="p-8 bg-white border border-slate-200 rounded-3xl shadow-sm">
-                    <Target size={32} className="text-emerald-600 mb-6" />
-                    <h3 className="text-lg font-black text-slate-900 mb-2 uppercase tracking-tight">Alignment</h3>
-                    <p className="text-sm text-slate-500 font-medium leading-relaxed">Systematic skill mapping ensuring agents meet specific competency levels.</p>
-                  </div>
-                  <div className="p-8 bg-white border border-slate-200 rounded-3xl shadow-sm">
-                    <ShieldCheck size={32} className="text-purple-600 mb-6" />
-                    <h3 className="text-lg font-black text-slate-900 mb-2 uppercase tracking-tight">Integrity</h3>
-                    <p className="text-sm text-slate-500 font-medium leading-relaxed">Auditable QA workflows and documented coaching session history.</p>
-                  </div>
-                </div>
-              </div>
-            </section>
-
-            {/* Section: Dashboard */}
-            <section id="dashboard" className="scroll-mt-8">
-              <div className="flex items-center gap-3 mb-6">
-                <div className="px-3 py-1 bg-blue-100 text-blue-600 rounded-full text-[10px] font-black uppercase tracking-widest">Chapter 02</div>
-                <div className="h-px flex-1 bg-slate-100"></div>
-              </div>
-              <h2 className="text-3xl font-black text-slate-900 tracking-tight mb-8">Dashboard Technical Interface</h2>
-              
-              <div className="space-y-12">
-                <p className="text-lg text-slate-600 leading-relaxed font-medium">
-                  The primary command center provides a "North Star" view of team health. Navigate the 8 critical components of the interface below:
-                </p>
-
-                {/* Annotated Diagram */}
-                <div className="relative bg-[#f1f5f9] rounded-[3rem] border border-slate-200 p-12 shadow-inner group/mock overflow-hidden">
-                  <div className="bg-white w-full rounded-[2rem] border border-slate-200 shadow-2xl flex overflow-hidden aspect-video relative transform transition-transform duration-1000">
-                     {/* Mock Sidebar */}
-                     <div className="w-20 bg-white border-r border-slate-100 flex flex-col items-center py-6 gap-6 shrink-0 relative z-10">
-                       <div className="w-10 h-10 bg-blue-600 rounded-xl shadow-lg shadow-blue-500/20"></div>
-                       <div className="w-12 h-px bg-slate-100"></div>
-                       {[Award, LayoutDashboard, Users, CheckCircle, MessageSquare].map((Icon, i) => (
-                         <div key={i} className={cn("w-10 h-10 rounded-xl flex items-center justify-center transition-colors", i === 1 ? "bg-blue-50 text-blue-600" : "bg-white text-slate-300")}>
-                           <Icon size={20} />
-                         </div>
-                       ))}
-                       <div className="mt-auto w-10 h-10 bg-slate-200 rounded-full border-2 border-white shadow-sm mb-2"></div>
-                     </div>
-
-                     <div className="flex-1 flex flex-col bg-[#f8fafc]">
-                        <div className="h-14 bg-white border-b border-slate-100 px-8 flex items-center justify-between">
-                           <div className="w-32 h-3 bg-slate-100 rounded-full"></div>
-                           <div className="w-24 h-4 bg-emerald-50 rounded-full border border-emerald-100"></div>
-                        </div>
-                        <div className="p-8 space-y-8 flex-1 overflow-hidden">
-                           <div className="grid grid-cols-4 gap-4">
-                              {[1,2,3,4].map(i => <div key={i} className="h-28 bg-white rounded-2xl border border-slate-100 shadow-sm p-4"></div>)}
-                           </div>
-                           <div className="grid grid-cols-3 gap-6">
-                              <div className="col-span-2 h-64 bg-white rounded-3xl border border-slate-100 shadow-sm p-6 relative overflow-hidden">
-                                 <div className="w-full h-full bg-slate-50/50 flex items-end gap-1 p-4">
-                                    {Array.from({length: 12}).map((_, i) => <div key={i} className="flex-1 bg-blue-400/20 border-t-2 border-blue-400/50" style={{ height: `${30 + Math.random() * 50}%` }}></div>)}
-                                 </div>
-                              </div>
-                              <div className="space-y-6">
-                                 <div className="h-32 bg-white rounded-3xl border border-slate-100 shadow-md"></div>
-                                 <div className="h-32 bg-white rounded-3xl border border-rose-50 border-l-4 border-l-rose-500 shadow-md"></div>
-                              </div>
-                           </div>
-                        </div>
-                     </div>
-                  </div>
-
-                  {/* Red Arrows / Callouts Pins */}
-                  {DASHBOARD_ANNOTATIONS.map((anno) => (
-                    <motion.div 
-                      key={anno.number}
-                      initial={{ scale: 0 }}
-                      whileInView={{ scale: 1 }}
-                      viewport={{ once: true }}
-                      className="absolute z-20"
-                      style={anno.position}
-                    >
-                      <div className="w-10 h-10 bg-rose-600 text-white rounded-full flex items-center justify-center font-black text-lg shadow-[0_0_30px_rgba(225,29,72,0.6)] ring-4 ring-white">
-                        {anno.number}
-                      </div>
-                    </motion.div>
-                  ))}
-                </div>
-
-                {/* Grid List */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-12 border-t border-slate-100 pt-16">
-                  {DASHBOARD_ANNOTATIONS.map((anno) => (
-                    <div key={anno.number} className="flex gap-6">
-                      <div className="shrink-0 w-12 h-12 bg-slate-900 text-white rounded-2xl flex items-center justify-center font-black text-xl">
-                        {anno.number}
-                      </div>
-                      <div>
-                        <h4 className="text-base font-black text-slate-900 uppercase tracking-tight mb-2">{anno.title}</h4>
-                        <p className="text-sm text-slate-500 font-medium leading-relaxed mb-4">{anno.description}</p>
-                        <div className="flex items-center gap-2 text-[10px] font-black text-blue-600 uppercase tracking-widest cursor-pointer hover:underline">
-                           View Extension Reference <ExternalLink size={12} />
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </section>
-
-            {/* Section: My Team */}
-            <section id="team" className="scroll-mt-8">
-              <div className="flex items-center gap-3 mb-6">
-                <div className="px-3 py-1 bg-blue-100 text-blue-600 rounded-full text-[10px] font-black uppercase tracking-widest">Chapter 03</div>
-                <div className="h-px flex-1 bg-slate-100"></div>
-              </div>
-              <h2 className="text-3xl font-black text-slate-900 tracking-tight mb-8">Team Portfolio Management</h2>
-              
-              <div className="bg-white border border-slate-200 rounded-[2.5rem] p-12 shadow-sm">
-                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
-                    <div>
-                       <div className="flex items-center gap-2 text-blue-600 mb-4">
-                          <Users size={20} />
-                          <span className="text-[10px] font-black uppercase tracking-widest">Module Summary</span>
-                       </div>
-                       <h3 className="text-2xl font-black text-slate-900 mb-4 tracking-tight leading-tight">Dynamic Agent Lifecycle Tracking</h3>
-                       <p className="text-slate-500 font-medium leading-relaxed mb-8">
-                          The "My Team" workspace is designed for rapid identity validation and performance context retrieval. Click any agent card to pivot from high-level stats into a granular timeline of their growth.
-                       </p>
-                       <ul className="space-y-4">
-                          {[
-                             { label: 'Real-time Presence', desc: 'Sync status indicators tied to LDAP/SAML.' },
-                             { label: 'Growth Delta', desc: 'Calculation of performance lift over the last 30 days.' },
-                             { label: 'Compliance Tagging', desc: 'Auto-verification of QA audit frequency.' }
-                          ].map((feat, i) => (
-                             <li key={i} className="flex gap-4">
-                                <div className="mt-1 w-5 h-5 bg-blue-50 rounded-full flex items-center justify-center border border-blue-100 shrink-0">
-                                   <ChevronRight size={12} className="text-blue-600" />
-                                </div>
-                                <div>
-                                   <span className="font-bold text-slate-900 text-sm block">{feat.label}</span>
-                                   <span className="text-xs text-slate-500 font-medium">{feat.desc}</span>
-                                </div>
-                             </li>
-                          ))}
-                       </ul>
-                    </div>
-                    <div className="relative">
-                       <div className="bg-slate-50 rounded-3xl border border-dashed border-slate-200 p-8 flex flex-col items-center justify-center text-center h-full">
-                          <div className="w-16 h-16 bg-white rounded-2xl shadow-lg flex items-center justify-center text-blue-500 mb-6">
-                             <FileText size={32} />
-                          </div>
-                          <h4 className="text-lg font-black text-slate-900 mb-2 uppercase tracking-tight">Resource Link</h4>
-                          <p className="text-xs text-slate-500 font-medium mb-6 px-4">
-                             Download the "Agent Onboarding Template" to standardize your initial team configuration.
-                          </p>
-                          <button className="px-6 py-3 bg-slate-900 text-white rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-slate-800 transition-colors">
-                             Download Technical PDF
-                          </button>
-                       </div>
-                    </div>
-                 </div>
-              </div>
-            </section>
-
-             {/* Section: Skills */}
-             <section id="skills" className="scroll-mt-8">
-              <div className="flex items-center gap-3 mb-6">
-                <div className="px-3 py-1 bg-blue-100 text-blue-600 rounded-full text-[10px] font-black uppercase tracking-widest">Chapter 04</div>
-                <div className="h-px flex-1 bg-slate-100"></div>
-              </div>
-              <h2 className="text-3xl font-black text-slate-900 tracking-tight mb-8">Competency Framework Matrix</h2>
-              
-              <div className="prose prose-slate max-w-none">
-                 <p className="text-lg text-slate-600 leading-relaxed font-medium mb-12">
-                   The Competency Matrix utilizes a 5-point validated scoring system. Each point represents a distinct behavioral milestone in agent proficiency.
-                 </p>
-                 
-                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 not-prose">
-                    {[
-                      { l: 1, n: 'Novice', c: 'bg-slate-50 text-slate-400 border-slate-100' },
-                      { l: 2, n: 'Emerging', c: 'bg-blue-50 text-blue-600 border-blue-100' },
-                      { l: 3, n: 'Competent', c: 'bg-emerald-50 text-emerald-600 border-emerald-100' },
-                      { l: 4, n: 'Advanced', c: 'bg-amber-50 text-amber-600 border-amber-100' },
-                      { l: 5, n: 'Expert', c: 'bg-rose-50 text-rose-600 border-rose-100' },
-                    ].map((lv) => (
-                      <div key={lv.l} className={cn("p-6 rounded-2xl border-2 text-center", lv.c)}>
-                        <div className="text-4xl font-black mb-2 leading-none">{lv.l}</div>
-                        <div className="text-[10px] font-black uppercase tracking-widest leading-none">{lv.n}</div>
-                      </div>
-                    ))}
-                 </div>
-
-                 <div className="mt-12 bg-slate-50 rounded-3xl p-8 border border-slate-200">
-                    <div className="flex items-center gap-3 mb-4">
-                       <ShieldCheck size={20} className="text-slate-900" />
-                       <span className="font-black text-slate-900 uppercase tracking-tight text-base">Impact Validation Rule</span>
-                    </div>
-                    <p className="text-sm text-slate-600 font-medium leading-relaxed">
-                      Skills cannot be advanced more than 1 level per 24-hour cycle. Any "Expert" promotion requires a secondary validation audit by the Quality Lead to ensure operational standard alignment.
-                    </p>
-                 </div>
-              </div>
-            </section>
+        <FunctionSection id="team" icon={Users} title="Team Operations" description="Technician Portfolio Management">
+          <p>
+            The Operations view lists all active resources. Each card features real-time CSAT, QA, and AHT metrics.
+          </p>
+          <h4 className="text-slate-800 font-bold mb-2">Key Interactions:</h4>
+          <div className="space-y-3">
+            <div className="flex items-center gap-3">
+              <div className="w-1.5 h-1.5 rounded-full bg-brand-500"></div>
+              <span>Filter by connection status (Online, In-Call, Away).</span>
+            </div>
+            <div className="flex items-center gap-3">
+              <div className="w-1.5 h-1.5 rounded-full bg-brand-500"></div>
+              <span>Click 'View Profile' to enter the Rep Intelligence view for deep-dive metrics.</span>
+            </div>
           </div>
+        </FunctionSection>
 
-          {/* Footer Assistance */}
-          <div className="mt-32 p-16 bg-blue-600 rounded-[3rem] text-white flex flex-col md:flex-row items-center justify-between gap-12 relative overflow-hidden shadow-2xl shadow-blue-500/40">
-             <div className="absolute top-0 right-0 p-12 opacity-10">
-                <LayoutDashboard size={300} />
-             </div>
-             <div className="relative z-10 max-w-xl text-center md:text-left">
-                <h2 className="text-4xl font-black mb-4 tracking-tighter leading-tight">Need further assistance?</h2>
-                <p className="text-lg text-blue-100 font-medium leading-relaxed">
-                   If you have reviewed the systems manual but still face functional blockers, please reach out via the internal ticketing portal or contact your local team lead.
-                </p>
-             </div>
-             <div className="relative z-10 flex flex-col gap-4 shrink-0">
-                <button className="px-10 py-5 bg-white text-blue-600 rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-blue-50 transition-all shadow-xl active:scale-95">
-                   Internal Support Portal
-                </button>
-                <button className="px-10 py-5 bg-blue-700 text-white border border-blue-500 rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-blue-800 transition-all active:scale-95 flex items-center justify-center gap-2">
-                   Submit Feedback
-                </button>
-             </div>
+        <FunctionSection id="qa" icon={CheckSquare} title="Quality Assurance Audit" description="Structured Interaction Evaluation">
+          <p>
+            The QA interface utilizes a weighted assessment blueprint across 6 critical categories from Greeting to Documentation.
+          </p>
+          <div className="p-5 bg-brand-50 rounded-2xl border border-brand-100 italic text-brand-700">
+            "Every audit committed is instantly calculated into the Representative's Quality Index and synced to the Performance Velocity chart."
           </div>
-        </main>
+        </FunctionSection>
+
+        <FunctionSection id="skills" icon={Target} title="Competency Matrix" description="Skill Inventory HUD">
+          <p>
+            A high-density grid tracking proficiency levels from 1 (Trainee) to 5 (Expert) across all enterprise skillsets.
+          </p>
+          <div className="bg-slate-50 border border-slate-100 rounded-2xl overflow-hidden mt-6">
+            <div className="p-4 bg-white border-b border-slate-100 text-[10px] font-black uppercase tracking-widest text-slate-400">Heuristic Data Model</div>
+            <div className="p-6 text-sm">
+              Proficiency markers are adjusted through structural audits. Reps who maintain &gt;95% QA in a category for 30 days are automatically flagged for mentor-track evaluation.
+            </div>
+          </div>
+        </FunctionSection>
+      </div>
+
+      <div className="bg-brand-600 p-10 rounded-[3rem] text-white text-center space-y-6">
+        <h2 className="text-3xl font-black tracking-tight">Still seeking clarity?</h2>
+        <p className="text-brand-100 max-w-xl mx-auto font-medium">
+          Our technical blueprint is constantly evolving. If a function is not documented here, please reach out via the Internal Support Terminal.
+        </p>
+        <button className="px-10 py-4 bg-white text-brand-600 rounded-2xl font-black text-sm hover:bg-brand-50 transition-all shadow-xl shadow-brand-700/20 active:scale-95">
+          Sync with Support
+        </button>
       </div>
     </div>
   );
