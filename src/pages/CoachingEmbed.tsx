@@ -18,7 +18,7 @@ export default function CoachingEmbed() {
 
   // Mock data for upcoming sessions tailored to IT Service Desk
   const upcomingCoaching = [
-    { id: 1, agentId: agents[0]?.id, agent: agents[0]?.name || 'Sarah Chen', date: 'Today, 2:00 PM', topic: 'FCR Drop on VPN Issues', status: 'overdue' },
+    { id: 1, agentId: agents[0]?.id, agent: agents[0]?.name || 'Alex Johnson', date: 'Today, 2:00 PM', topic: 'FCR Drop on VPN Issues', status: 'overdue' },
     { id: 2, agentId: agents[1]?.id, agent: agents[1]?.name || 'Marcus Green', date: 'Tomorrow, 10:30 AM', topic: 'De-escalation Techniques', status: 'upcoming' },
     { id: 3, agentId: agents[2]?.id, agent: agents[2]?.name || 'Alex Johnson', date: 'Wed, 1:15 PM', topic: 'Tier 2 Escalation Process', status: 'upcoming' },
     { id: 4, agentId: agents[3]?.id, agent: agents[3]?.name || 'Priya Patel', date: 'Thu, 9:00 AM', topic: 'Handle Time Optimization', status: 'upcoming' },
@@ -80,10 +80,13 @@ export default function CoachingEmbed() {
 
       {/* Control Center Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        <div className="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm relative overflow-hidden">
+        <div 
+          onClick={() => setIsCalendarOpen(true)}
+          className="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm relative overflow-hidden cursor-pointer hover:border-brand-200 hover:shadow-md transition-all active:scale-[0.98] group"
+        >
           <h3 className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1 flex items-center justify-between">
             Sessions (MTD)
-            <CalendarIcon size={14} className="text-blue-500" />
+            <CalendarIcon size={14} className="text-blue-500 group-hover:scale-110 transition-transform" />
           </h3>
           <div className="flex items-baseline gap-2 mb-3">
             <span className="text-4xl font-black text-slate-800 tracking-tight">18</span>
@@ -94,10 +97,13 @@ export default function CoachingEmbed() {
           </div>
         </div>
 
-        <div className="bg-white p-6 rounded-3xl border border-orange-200 shadow-sm shadow-orange-100 relative overflow-hidden">
+        <div 
+          onClick={() => navigate('/coaching/action-items')}
+          className="bg-white p-6 rounded-3xl border border-orange-200 shadow-sm shadow-orange-100 relative overflow-hidden cursor-pointer hover:border-orange-300 hover:shadow-md transition-all active:scale-[0.98] group"
+        >
           <h3 className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1 flex items-center justify-between">
             Action Items Overdue
-            <AlertTriangle size={14} className="text-orange-500" />
+            <AlertTriangle size={14} className="text-orange-500 group-hover:scale-110 transition-transform" />
           </h3>
           <div className="flex items-baseline gap-2 mb-3">
             <span className="text-4xl font-black text-orange-600 tracking-tight">3</span>
@@ -177,7 +183,7 @@ export default function CoachingEmbed() {
           </div>
           
           <button 
-            onClick={() => toast.info('Scheduling interface coming soon')}
+            onClick={() => window.open('https://techlead-coaching-688900746393.us-west2.run.app/', '_blank', 'noopener,noreferrer')}
             className="mt-4 w-full py-3 border-2 border-dashed border-slate-200 text-slate-500 font-bold text-sm rounded-2xl hover:border-brand-300 hover:text-brand-600 hover:bg-brand-50 transition-all"
           >
             + Schedule New Session
@@ -268,7 +274,13 @@ export default function CoachingEmbed() {
                    idx === 1 ? "Reviewed FCR improvements from last week's action plan..." : 
                    "Clarified Escalation Tier 2 scope boundaries..."}
                 </div>
-                <button className="p-2 text-slate-400 group-hover:text-brand-600 bg-white rounded-lg shadow-sm border border-slate-200 hover:border-brand-200 transition-all shrink-0 print:hidden">
+                <button 
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    navigate(`/coaching/sessions/CS-${agent.id}-${idx}`);
+                  }}
+                  className="p-2 text-slate-400 group-hover:text-brand-600 bg-white rounded-lg shadow-sm border border-slate-200 hover:border-brand-200 transition-all shrink-0 print:hidden"
+                >
                    <ArrowUpRight size={14} />
                 </button>
               </div>

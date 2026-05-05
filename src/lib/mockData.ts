@@ -2,7 +2,7 @@ export const teamMembers = [
   {
     id: "rep-001",
     name: "Alex Johnson",
-    role: "Senior Consultant",
+    role: "IT Service Desk T1",
     status: "online",
     metrics: {
       csat: 94,
@@ -10,13 +10,13 @@ export const teamMembers = [
       aht: "6m 12s",
       qaScore: 92,
     },
-    skills: { "ETS": 5, "Claims": 4, "Agent": 5, "Property": 3, "Fleet": 4 },
+    skills: { "ETS": 4, "Agent": 2, "Claims": 1, "Property": 0, "Fleet": 3, "Cloud (Azure/AWS)": 4, "Identity (AD/Okta)": 5 },
     avatar: "https://i.pravatar.cc/150?u=a042581f4e29026024d",
   },
   {
     id: "rep-002",
     name: "Samantha Lee",
-    role: "Claims Specialist",
+    role: "IT Service Desk T1",
     status: "offline",
     metrics: {
       csat: 98,
@@ -24,13 +24,13 @@ export const teamMembers = [
       aht: "8m 45s",
       qaScore: 97,
     },
-    skills: { "ETS": 3, "Claims": 5, "Agent": 4, "Property": 5, "Fleet": 3 },
+    skills: { "ETS": 1, "Agent": 5, "Claims": 4, "Property": 2, "Fleet": 0, "Cloud (Azure/AWS)": 3, "Identity (AD/Okta)": 4 },
     avatar: "https://i.pravatar.cc/150?u=a04258a2462d826712d",
   },
   {
     id: "rep-003",
     name: "Marcus Green",
-    role: "Field Adjuster",
+    role: "IT Service Desk T1",
     status: "in-call",
     metrics: {
       csat: 82,
@@ -38,13 +38,13 @@ export const teamMembers = [
       aht: "11m 30s",
       qaScore: 78,
     },
-    skills: { "ETS": 2, "Claims": 3, "Agent": 2, "Property": 4, "Fleet": 2 },
+    skills: { "ETS": 0, "Agent": 2, "Claims": 1, "Property": 4, "Fleet": 2, "Cloud (Azure/AWS)": 1, "Identity (AD/Okta)": 2 },
     avatar: "https://i.pravatar.cc/150?u=a042581f4e29026704d",
   },
   {
     id: "rep-004",
     name: "Priya Patel",
-    role: "Property Lead",
+    role: "IT Service Desk T1",
     status: "online",
     metrics: {
       csat: 89,
@@ -52,13 +52,13 @@ export const teamMembers = [
       aht: "7m 50s",
       qaScore: 86,
     },
-    skills: { "ETS": 4, "Claims": 4, "Agent": 5, "Property": 5, "Fleet": 5 },
+    skills: { "ETS": 5, "Agent": 4, "Claims": 5, "Property": 3, "Fleet": 4, "Cloud (Azure/AWS)": 5, "Identity (AD/Okta)": 5 },
     avatar: "https://i.pravatar.cc/150?u=a04258114e29026302d",
   },
   {
     id: "rep-005",
     name: "David Kim",
-    role: "Fleet Manager",
+    role: "IT Service Desk T1",
     status: "away",
     metrics: {
       csat: 91,
@@ -66,7 +66,7 @@ export const teamMembers = [
       aht: "9m 10s",
       qaScore: 88,
     },
-    skills: { "ETS": 5, "Claims": 2, "Agent": 3, "Property": 2, "Fleet": 5 },
+    skills: { "ETS": 2, "Agent": 3, "Claims": 0, "Property": 5, "Fleet": 5, "Cloud (Azure/AWS)": 2, "Identity (AD/Okta)": 3 },
     avatar: "https://i.pravatar.cc/150?u=a048581f4e29026701d",
   },
 ];
@@ -90,12 +90,12 @@ export const recentQA = [
   { 
     id: "QA-1005", rep: "Alex Johnson", ticket: "INC129001", score: 96, date: "2023-11-01", reviewer: "Coach Dan", status: "completed",
     details: { opening: 100, authenticating: 100, listening: 100, technical: 95, closing: 90, logging: 100 },
-    notes: "Excellent call. Alex handled the escalated billing issue perfectly, verified identity swiftly, and provided a comprehensive explanation of the prorated charges."
+    notes: "Excellent call. Alex handled the escalated VPN issue perfectly, verified identity swiftly, and provided a comprehensive explanation of the security certificate error."
   },
   { 
     id: "QA-1006", rep: "Priya Patel", ticket: "REQ094421", score: 84, date: "2023-10-31", reviewer: "Coach Dan", status: "completed",
     details: { opening: 90, authenticating: 100, listening: 90, technical: 80, closing: 85, logging: 90 },
-    notes: "Good overall interaction handling the hardware request. Could have offered more proactive suggestions regarding the shipping timeline, but all technical requirements were met."
+    notes: "Good overall interaction handling the hardware request. Could have offered more proactive suggestions regarding the laptop deployment timeline, but all technical requirements were met."
   },
 ];
 
@@ -142,5 +142,35 @@ export const initialNotes = [
     date: "2023-11-03",
     followUpDate: "2023-11-07",
     author: "Coach Dan"
+  }
+];
+
+export const initialCommunications = [
+  {
+    id: "comm-1",
+    agentId: "rep-003",
+    agentName: "Marcus Green",
+    type: "Teams Chat",
+    subject: "QA Performance Alert: Critical Score on INC128945",
+    date: "2026-05-05 09:12 AM",
+    status: "Sent"
+  },
+  {
+    id: "comm-2",
+    agentId: "rep-001",
+    agentName: "Alex Johnson",
+    type: "Outlook Invite",
+    subject: "VPN Module Mastery Check-in",
+    date: "2026-05-06 11:30 AM",
+    status: "Scheduled"
+  },
+  {
+    id: "comm-3",
+    agentId: "rep-003",
+    agentName: "Marcus Green",
+    type: "1:1 Sync",
+    subject: "Burnout Wellness Check",
+    date: "2026-05-04 03:20 PM",
+    status: "Delivered"
   }
 ];

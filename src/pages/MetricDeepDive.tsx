@@ -26,7 +26,22 @@ import {
 
 export default function MetricDeepDive() {
   const { metricId } = useParams();
-  const { agents, performance } = useStore();
+  const { agents, performance, timeRange } = useStore();
+
+  // Data multipliers for simulation (synced with dashboard)
+  const multipliers: Record<number, number> = {
+    30: 1,
+    60: 1.05,
+    90: 1.12
+  };
+
+  const getSimValue = (base: number) => Math.round(base * multipliers[timeRange]);
+
+  const trends = {
+    30: { qa: "+1.4%", csat: "+2.1%", aht: "-42s better", fcr: "+4.5%" },
+    60: { qa: "+2.8%", csat: "+1.9%", aht: "-1m 04s better", fcr: "+3.2%" },
+    90: { qa: "+4.1%", csat: "+3.4%", aht: "-1m 18s better", fcr: "+5.1%" }
+  }[timeRange as 30 | 60 | 90];
 
   const metricConfig = {
     qa: {
@@ -34,8 +49,8 @@ export default function MetricDeepDive() {
       description: 'Quality Assurance score analysis across all evaluated interactions.',
       icon: CheckCircle2,
       color: 'emerald',
-      value: `${Math.round(agents.reduce((sum, a) => sum + (a.metrics.qaScore || 0), 0) / (agents.length || 1))}%`,
-      trend: '+1.4%',
+      value: `${getSimValue(Math.round(agents.reduce((sum, a) => sum + (a.metrics.qaScore || 0), 0) / (agents.length || 1)))}%`,
+      trend: trends?.qa,
       chartType: 'line',
       chartDataKey: 'qa'
     },
@@ -44,8 +59,8 @@ export default function MetricDeepDive() {
       description: 'Customer Satisfaction scores aggregated from post-interaction surveys.',
       icon: Users,
       color: 'blue',
-      value: `${Math.round(agents.reduce((sum, a) => sum + (a.metrics.csat || 0), 0) / (agents.length || 1))}%`,
-      trend: '+2.1%',
+      value: `${getSimValue(Math.round(agents.reduce((sum, a) => sum + (a.metrics.csat || 0), 0) / (agents.length || 1)))}%`,
+      trend: trends?.csat,
       chartType: 'bar',
       chartDataKey: 'csat'
     },
@@ -54,8 +69,8 @@ export default function MetricDeepDive() {
       description: 'Total average duration of interactions including talk, hold, and wrap-up time.',
       icon: Clock,
       color: 'brand',
-      value: '7m 14s',
-      trend: '-42s better',
+      value: timeRange === 30 ? "7m 14s" : timeRange === 60 ? "6m 52s" : "6m 38s",
+      trend: trends?.aht || '',
       chartType: 'line',
       chartDataKey: 'coachingHours' // Mocking using coaching hours as variability
     },
@@ -64,10 +79,30 @@ export default function MetricDeepDive() {
       description: 'Percentage of customer issues resolved on their very first interaction.',
       icon: Target,
       color: 'purple',
-      value: `${Math.round(agents.reduce((sum, a) => sum + (a.metrics.fcr || 0), 0) / (agents.length || 1))}%`,
-      trend: '+4.5%',
+      value: `${getSimValue(Math.round(agents.reduce((sum, a) => sum + (a.metrics.fcr || 0), 0) / (agents.length || 1)))}%`,
+      trend: trends?.fcr,
       chartType: 'bar',
       chartDataKey: 'csat' // Mocking
+    },
+    escalation: {
+      title: 'Escalation Rate',
+      description: 'Percentage of tickets requiring transfer to specialized tier-2 or tier-3 support teams.',
+      icon: TrendingUp,
+      color: 'rose',
+      value: "17.3%",
+      trend: "-1.2%",
+      chartType: 'line',
+      chartDataKey: 'qa'
+    },
+    sla: {
+      title: 'SLA Adherence',
+      description: 'Percentage of interactions meeting the defined Service Level Agreement response and resolution times.',
+      icon: CheckCircle2,
+      color: 'indigo',
+      value: "90.2%",
+      trend: "+0.8%",
+      chartType: 'bar',
+      chartDataKey: 'csat'
     }
   };
 
@@ -78,7 +113,7 @@ export default function MetricDeepDive() {
       <div className="flex flex-col items-center justify-center h-[60vh]">
         <Activity size={48} className="text-slate-200 mb-4" />
         <h2 className="text-xl font-black text-slate-800">Metric not found</h2>
-        <Link to="/" className="text-brand-600 font-bold hover:underline mt-2">Return to Dashboard</Link>
+        <Link to="/executive" className="text-brand-600 font-bold hover:underline mt-2">Return to Executive Dashboard</Link>
       </div>
     );
   }
@@ -88,28 +123,34 @@ export default function MetricDeepDive() {
     emerald: 'bg-emerald-50 text-emerald-600',
     blue: 'bg-blue-50 text-blue-600',
     brand: 'bg-brand-50 text-brand-600',
-    purple: 'bg-purple-50 text-purple-600'
+    purple: 'bg-purple-50 text-purple-600',
+    rose: 'bg-rose-50 text-rose-600',
+    indigo: 'bg-indigo-50 text-indigo-600'
   };
 
   const borderMap: Record<string, string> = {
     emerald: 'border-emerald-200',
     blue: 'border-blue-200',
     brand: 'border-brand-200',
-    purple: 'border-purple-200'
+    purple: 'border-purple-200',
+    rose: 'border-rose-200',
+    indigo: 'border-indigo-200'
   };
 
   const sortedAgents = [...agents].sort((a, b) => {
     if (metricId === 'qa') return (b.metrics.qaScore || 0) - (a.metrics.qaScore || 0);
     if (metricId === 'csat') return (b.metrics.csat || 0) - (a.metrics.csat || 0);
     if (metricId === 'fcr') return (b.metrics.fcr || 0) - (a.metrics.fcr || 0);
+    if (metricId === 'escalation') return (b.metrics.qaScore || 0) - (a.metrics.qaScore || 0);
+    if (metricId === 'sla') return (b.metrics.csat || 0) - (a.metrics.csat || 0);
     return 0; // Default generic
   });
 
   return (
     <div className="space-y-8 pb-10">
-      <Link to="/" className="inline-flex items-center gap-2 text-xs font-bold text-slate-500 hover:text-brand-600 transition-colors uppercase tracking-widest">
+      <Link to="/executive" className="inline-flex items-center gap-2 text-xs font-bold text-slate-500 hover:text-brand-600 transition-colors uppercase tracking-widest">
         <ChevronLeft size={16} />
-        Back to Dashboard
+        Back to Executive Dashboard
       </Link>
 
       <div className="flex flex-col md:flex-row gap-8">
@@ -200,6 +241,7 @@ export default function MetricDeepDive() {
                       {metricId === 'csat' && `${agent.metrics.csat}%`}
                       {metricId === 'fcr' && `${agent.metrics.fcr}%`}
                       {metricId === 'aht' && agent.metrics.aht}
+                      {(metricId === 'escalation' || metricId === 'sla') && `${agent.metrics.qaScore}%`}
                     </span>
                   </td>
                   <td className="px-6 py-4 text-center">

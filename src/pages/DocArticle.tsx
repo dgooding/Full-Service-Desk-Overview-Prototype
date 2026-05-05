@@ -4,65 +4,65 @@ import { ChevronLeft, FileText, Anchor } from 'lucide-react';
 import { motion } from 'motion/react';
 
 const DOCS_CONTENT = {
-  'environment-setup': {
-    title: 'Environment Setup',
-    description: 'Everything you need to set up your team and configure your first performance cycle.',
-    content: `## System Requirements\nEnsure that your network meets our connectivity standards for real-time WebSocket syncing. We recommend a high-speed connection for video playback during QA, and firewall rules updated to allow inbound traffic on our API domains.\n\n## Initial Configuration\n1. Login to LeadCoach Admin Portal.\n2. Navigate to Settings -> Organization.\n3. Establish your timezone and data privacy region settings.\n4. Invite your initial coach roster through the Team directory.`
+  'navigating-executive-dashboard': {
+    title: 'Navigating the Executive Dashboard',
+    description: 'Learn how to read and interact with the high-level metrics on the Executive Dashboard.',
+    content: `## The Overview Header\nAt the top of the Executive Dashboard, you'll find key performance indicators (KPIs) aggregated across all your frontline representatives. These metrics cover Total Reps, Average First Call Resolution (FCR), Average Customer Satisfaction (CSAT), Service Level Agreement (SLA) Compliance, QA Scores, Open Backlog, Escalation Rate, and more. \n\n## The Interactive Charts\nThe main charts offer visualizations of performance over time or across different teams/regions. You can hover over data points in the bar charts or line graphs to see specific values for a given period. Use the timeline filters (if available) to adjust the scope of data being displayed.\n\n## The Representative List\nBelow the charts, there is a comprehensive list of all your IT Service Desk representatives. Each row details their specific KPIs. You can sort this list by clicking on the column headers (e.g., sorting by 'CSAT' to see your highest or lowest performers). Clicking on a specific rep will bring up a snapshot view of their performance, and from there you can navigate to their full profile.`
   },
-  'defining-benchmarks': {
-    title: 'Defining Benchmarks',
-    description: 'Set your team up for success by building consistent operational goals.',
-    content: `## Baseline Assessment\nBefore establishing targets, run a 30-day baseline assessment on the QA audit module to see the natural distribution of scores. \n\n## Target Setting\nWe recommend starting with industry averages for initial targets:\n- **CSAT**: 85% Minimal, 92% Target\n- **AHT (Average Handle Time)**: Service desk specific. Typical is 7m 30s.\n- **First Contact Resolution (FCR)**: Target >75% for basic issues.\n\nUse the settings panel to commit these figures, which will update the Global Performance Dashboard.`
+  'managing-team-operations': {
+    title: 'Managing Team Operations & Status',
+    description: 'A guide to using the My Team page to organize your staff.',
+    content: `## The Team Roster\nThe "My Team" page is your central hub for viewing every agent under your purview. It displays an at-a-glance view of their current status, recent performance tier, and when they were last coached.\n\n## Status Monitoring\nYou can see which agents are currently available, which are in coaching sessions, or offline. This helps with workforce management and ensuring there is enough coverage on the floor.`
   },
-  'team-onboarding': {
-    title: 'Team Onboarding',
-    description: 'Adding agents to the directory and initializing them into the workflow.',
-    content: `## Add a New Agent\nGo to the **My Team** section and click "Add Agent". Enter their details (Name, Role, Department). \nOnce added, they will appear in the registry, and you can proceed to assess their baseline skills matrix.\n\n## Initial Skills Evaluation\nWe recommend standardizing skill competency levels between 1-5 where:\n1 - Novice (Needs immediate support)\n3 - Competent (Handles most calls without escalation)\n5 - Expert (SME level, mentor candidate)`
+  'kpi-calculations': {
+    title: 'KPI Calculations',
+    description: 'How we calculate key performance metrics on the dashboard.',
+    content: `## Overall Performance Score\nOur system calculates an agent's overall score dynamically based on the following weighted formula:\n- **First Call Resolution (FCR)**: 20%\n- **Customer Satisfaction (CSAT)**: 20%\n- **Quality Score (QA)**: 20%\n- **SLA Adherence**: 20%\n- **Time Adherence**: 10%\n- **Ticket Volume (Normalized)**: 10%\n\n## Data Refresh Rates\nMetrics are synced throughout the day in real-time, but performance tiers are calculated nightly.`
   },
-  'focus-mode': {
-    title: 'Focus Mode Guide',
-    description: 'Use focus mode during live 1-on-1 coaching for optimal attention.',
-    content: `When Focus Mode is activated (via the top Navigation Bar), the platform will dim external distractions, suppress non-critical dashboard notifications, and isolate active coaching metrics to keep the conversation centered on outcome alignment.\n\nYou can customize which metrics stay highlighted during Focus Mode in the Coach Settings panel.`
+  'exporting-reports': {
+    title: 'Exporting Reports & CSVs',
+    description: 'How to extract your dashboard data into shareable files.',
+    content: `## Exporting Data\nOn most dashboard views, especially the Executive Dashboard and QA Reviews, you will see an "Export CSV" or "Print Report" button. Clicking "Export CSV" will immediately download a spreadsheet containing the currently filtered dataset on your screen.\n\n## Using the Data\nThe exported CSV files can be imported into Excel, Google Sheets, or other BI tools (like Tableau or PowerBI) for further proprietary analysis or combined with HR and finance data.`
   },
-  'webhooks-signal-sync': {
-    title: 'Webhooks & Signal Sync',
-    description: 'Real-time state synchronization via RESTful webhooks.',
-    content: `## Endpoint Configuration\nTo listen for real-time QA and Coaching events, configure your Receiving Endpoint in the developer settings. We support standard \`POST\` payloads using JSON formatting.\n\n## Included Events\n- \`qa.audit.completed\`: Fired when a QA score is recorded.\n- \`session.scheduled\`: Fired when a new 1-on-1 session is booked.\n- \`agent.status.changed\`: Useful for WFM integration (Online, Offline, In-Call).`
+  'viewing-qa-dashboard': {
+    title: 'Viewing the QA Reviews Dashboard',
+    description: 'How to navigate the QA auditing tools and check recent evaluations.',
+    content: `## The Recent Reviews List\nThe QA Reviews page shows all recent ticket audits performed by coaches or QA specialists. You can see the ticket number, the agent evaluated, the final score, and the date of review.\n\n## Filtering and Search\nUse the search bar to find a specific ticket number or agent name. You can also filter by score ranges to quickly identify calls that failed compliance or need immediate coaching.`
   },
-  'auth-tokens': {
-    title: 'Auth Tokens',
-    description: 'Securing the LeadCoach API infrastructure.',
-    content: `We utilize OAuth 2.0 and JWT (JSON Web Tokens) for authenticating machine-to-machine requests. \nAlways pass your Bearer token in the Authorization header:\n\`Authorization: Bearer <your-token-here>\`\n\nTokens rotate every 24 hours. Ensure your integration client requests a refresh token appropriately to prevent connection drops.`
+  'how-to-grade-ticket': {
+    title: 'How to Grade a Ticket',
+    description: 'A step-by-step guide to filling out a QA evaluation.',
+    content: `## Starting a Review\nClick the "New Review" button on the QA Reviews page. You will be prompted to enter the Ticket ID and select the agent that handled it.\n\n## The Scorecard\nThe evaluation form is divided into sections such as Greeting, Troubleshooting, Technical Accuracy, and Closing. Rate each section according to your internal rubric. Some sections may have critical "auto-fail" criteria (e.g., failing to verify user identity). \n\n## Leaving Feedback\nAlways leave constructive notes in the text fields provided. These notes will be visible to the agent during their next 1-on-1 coaching session.`
   },
-  'payload-schemas': {
-    title: 'Payload Schemas',
-    description: 'The JSON structure of LeadCoach integration resources.',
-    content: `All response payloads adhere to top-level key standard wrapping, e.g.,\n\`{\n  "data": { ... },\n  "meta": { "timestamp": "..." }\n}\`\n\nSchema definitions are rigidly typed. Any updates to definitions will be communicated 60 days before deprecation of the older schema version.`
+  'tracking-qa-scores': {
+    title: 'Tracking QA Scores Over Time',
+    description: 'Visualizing QA trends to spot systemic issues.',
+    content: `## Trend Charts\nThe QA Dashboard includes trend lines showing the team's average QA score over the past several weeks or months. \n\n## Deep Dives\nIf you see a sudden dip in quality, you can click into that specific week to see which categories (e.g., Technical Accuracy, Soft Skills) caused the drop. This allows you to deploy targeted micro-training to the team.`
   },
-  'rate-limit-control': {
-    title: 'Rate Limit Control',
-    description: 'Understanding enterprise throughput guarantees.',
-    content: `Rate limits are assessed periodically during heavy traffic:\n- **Standard Tier**: 100 requests / minute\n- **Enterprise Tier**: 1,000 requests / minute\n\nWhen rate limited, the API will throw a \`429 Too Many Requests\` response. Follow the \`Retry-After\` header hints to properly queue back-off requests.`
+  'escalations': {
+    title: 'Addressing Escalations',
+    description: 'Best practices for managing user ticket escalations.',
+    content: `## Escalation Workflows\nWhen a ticket is escalated, it generally indicates a failure in initial tier triage, missing knowledge base documentation, or a critical system error.\n\n## QA and Escalations\nIn the QA module, you can actively flag tickets that resulted in an unexpected escalation. Add action items directly tied to these metrics to ensure reps learn from the escalation path and update their troubleshooting routines.`
   },
-  'data-retention': {
-    title: 'Data Retention Policy',
-    description: 'Compliance and archiving for historical team data.',
-    content: `LeadCoach retains all QA scorecards and agent profile metadata for 7 years by default, conforming with standard financial and healthcare operational reporting policies. \n\nVoice/Screen recordings (if attached via an external CDN) are governed by your third-party CDN's retention cycle.`
+  'assessing-skills': {
+    title: 'Assessing Skills in the Matrix',
+    description: 'How to evaluate and update agent competencies.',
+    content: `## The Competency Matrix\nThe Skills Matrix provides a heat-map view of your entire team's proficiency across various technical areas (e.g., Active Directory, Network Troubleshooting, Hardware).\n\n## Updating Skill Levels\nClick on a specific agent or skill cell to update their rating. We use a 1-5 scale (1 = Novice, 3 = Competent, 5 = Expert). When an agent completes a certification or shadows a senior tech, you should update their score here to reflect their new capability.`
   },
-  'rbac-matrix': {
-    title: 'RBAC Matrix',
-    description: 'Role-Based Access Control and permission tiers.',
-    content: `The RBAC architecture operates primarily on 3 roles:\n1. **Agent**: Read-only access focused on their own profile and coaching plans.\n2. **Coach**: Write access to sessions, QA reviews, and team metadata.\n3. **Admin**: Read/Write for system settings, billing, API controls, and user lifecycle operations.\n\nRoles can be adjusted via the Admin Portal under "User Provisioning".`
+  'logging-coaching-sessions': {
+    title: 'Logging Coaching Sessions',
+    description: 'Recording 1-on-1s and performance conversations.',
+    content: `## Creating a Session Record\nNavigate to the Coaching tab and click "Log Session". Select the agent you are meeting with. \n\n## Agenda and Notes\nDocument what was discussed, including reviewing recent QA scores, discussing career goals, or addressing behavioral issues. These logs create a historical record of management and support, which is critical for HR documentation and tracking growth over time.`
   },
-  'audit-journal': {
-    title: 'Audit Journal',
-    description: 'Indelible logging of system actions.',
-    content: `Every write operation (QA completion, skill level change, user role swap) is securely logged in the append-only Audit Journal. \n\nYou can export the past 90 days of Audit Logs using the Reporting dashboard formatted as a CSV. For security compliance purposes, this history cannot be manually altered or erased.`
+  'assigning-action-items': {
+    title: 'Assigning Action Items',
+    description: 'How to create follow-up tasks for your agents.',
+    content: `## During a Session\nWhile logging a coaching session or reviewing a QA ticket, you can assign Action Items to the agent. \n\n## Tracking Completion\nAction items appear on the agent's dashboard as tasks they need to complete (e.g., "Read the updated VPN documentation", "Shadow John for 1 hour on Mac issues"). You can monitor the status of these items from the Coaching Dashboard. An item isn't resolved until the coach verifies it.`
   },
-  'encryption-headers': {
-    title: 'Encryption Headers',
-    description: 'In-transit and static database cryptography.',
-    content: `All data transmitted is secured using TLS 1.3 across the wire. \nAt rest, agent databases, QA records, and session notes use AES-256 block encryption. \nFor enterprise deployments, Custom KMS (Key Management Systems) can be bound to your storage cluster.`
+  'viewing-rep-growth': {
+    title: 'Viewing Rep Growth Trajectories',
+    description: 'Analyzing an agent\'s individual profile to determine promotion readiness.',
+    content: `## The Agent Profile\nClicking on an agent's name anywhere in the app will take you to their detailed profile. Here, you can see their historical KPI trends, their current Skills Matrix radar chart, and all past coaching notes.\n\n## Promotion Readiness\nLook for upward trends in CSAT, a steady increase in Skill Matrix levels, and a history of completed Action Items. This holistic view provides the data needed to justify advancements into specialized technical roles or leadership positions.`
   }
 };
 

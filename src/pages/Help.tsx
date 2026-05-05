@@ -1,12 +1,13 @@
 import React from 'react';
 import { 
-  BookOpen, 
+  BarChart3, 
   Search, 
-  MessageCircle, 
-  FileText, 
-  Terminal, 
-  Shield, 
-  Zap, 
+  Users, 
+  CheckCircle2, 
+  Target, 
+  MessagesSquare, 
+  ListTodo,
+  Lightbulb,
   ChevronRight,
   ExternalLink,
   Code
@@ -39,13 +40,13 @@ export default function Help() {
       <section className="text-center max-w-2xl mx-auto space-y-6">
         <h1 className="text-5xl font-black text-slate-900 tracking-tighter">Documentation & Support</h1>
         <p className="text-slate-500 font-medium text-lg leading-relaxed">
-          Master the LeadCoach environment with detailed blueprints, integration guides, and live session support.
+          Master the LeadCoach platform with detailed guides on managing your IT frontline service desk, evaluating quality, and coaching your team.
         </p>
         <div className="relative max-w-md mx-auto">
           <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-400" />
           <input 
             type="text" 
-            placeholder="Search the blueprint library..." 
+            placeholder="Search guides (e.g. 'coaching', 'KPIs')..." 
             className="w-full pl-12 pr-4 py-4 bg-white border border-slate-200 rounded-2xl text-sm font-bold shadow-sm focus:ring-2 focus:ring-brand-500/20 outline-none transition-all"
           />
         </div>
@@ -53,36 +54,36 @@ export default function Help() {
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
         <HelpCard 
-          icon={Zap} 
-          title="Onboarding Guide" 
-          description="Everything you need to set up your team and configure your first performance cycle."
+          icon={BarChart3} 
+          title="Executive & Management" 
+          description="High-level insights into team performance, SLA adherence, and operational metrics."
           items={[
-            { label: "Environment Setup", href: "/help/docs/environment-setup" },
-            { label: "Defining Benchmarks", href: "/help/docs/defining-benchmarks" },
-            { label: "Team Onboarding", href: "/help/docs/team-onboarding" },
-            { label: "Focus Mode Guide", href: "/help/docs/focus-mode" }
+            { label: "Navigating the Executive Dashboard", href: "/help/docs/navigating-executive-dashboard" },
+            { label: "Managing Team Operations & Status", href: "/help/docs/managing-team-operations" },
+            { label: "Understanding KPI Calculations", href: "/help/docs/kpi-calculations" },
+            { label: "Exporting Reports & CSVs", href: "/help/docs/exporting-reports" }
           ]}
         />
         <HelpCard 
-          icon={Terminal} 
-          title="API Foundations" 
-          description="Power your dashboard with enterprise integrations from Jira, ServiceNow, and Salesforce."
+          icon={CheckCircle2} 
+          title="Quality Assurance (QA)" 
+          description="Tools to audit tickets, evaluate first-call resolution (FCR), and score rep quality."
           items={[
-            { label: "Webhooks & Signal Sync", href: "/help/docs/webhooks-signal-sync" },
-            { label: "Auth Tokens", href: "/help/docs/auth-tokens" },
-            { label: "Payload Schemas", href: "/help/docs/payload-schemas" },
-            { label: "Rate Limit Control", href: "/help/docs/rate-limit-control" }
+            { label: "Viewing the QA Reviews Dashboard", href: "/help/docs/viewing-qa-dashboard" },
+            { label: "How to Grade a Ticket", href: "/help/docs/how-to-grade-ticket" },
+            { label: "Tracking QA Scores Over Time", href: "/help/docs/tracking-qa-scores" },
+            { label: "Addressing Escalations", href: "/help/docs/escalations" }
           ]}
         />
         <HelpCard 
-          icon={Shield} 
-          title="Security Protocols" 
-          description="Understand how LeadCoach protects agent PII and maintains enterprise-grade auditing."
+          icon={Target} 
+          title="Coaching & Competency" 
+          description="Develop your representatives through structured 1-on-1s, skill matrices, and action items."
           items={[
-            { label: "Data Retention Policy", href: "/help/docs/data-retention" },
-            { label: "RBAC Matrix", href: "/help/docs/rbac-matrix" },
-            { label: "Audit Journal", href: "/help/docs/audit-journal" },
-            { label: "Encryption Headers", href: "/help/docs/encryption-headers" }
+            { label: "Assessing Skills in the Matrix", href: "/help/docs/assessing-skills" },
+            { label: "Logging Coaching Sessions", href: "/help/docs/logging-coaching-sessions" },
+            { label: "Assigning Action Items", href: "/help/docs/assigning-action-items" },
+            { label: "Viewing Rep Growth Trajectories", href: "/help/docs/viewing-rep-growth" }
           ]}
         />
       </div>
@@ -90,23 +91,23 @@ export default function Help() {
       <div className="bg-slate-900 rounded-[3rem] p-10 text-white flex flex-col md:flex-row items-center justify-between gap-10 overflow-hidden relative shadow-2xl">
         <div className="relative z-10 space-y-6 max-w-xl">
           <div className="inline-flex gap-2 px-3 py-1 bg-white/10 rounded-full text-[10px] font-black uppercase tracking-[0.2em] border border-white/10">
-            <span className="text-brand-400">Advanced</span> Documentation
+            <span className="text-brand-400">Platform</span> Enhancement
           </div>
-          <h2 className="text-4xl font-black tracking-tight leading-none">Internal Functionality Blueprint</h2>
+          <h2 className="text-4xl font-black tracking-tight leading-none">Feature & Report Requests</h2>
           <p className="text-slate-300 font-medium text-lg">
-            A deep-dive into every interface component, algorithm, and behavioral trigger within the LeadCoach platform.
+            Can't find a specific data point? Need a new workflow integration? Submit and vote on feature requests directly within the platform.
           </p>
           <Link 
-            to="/help/functions" 
+            to="/requests" 
             className="inline-flex items-center gap-2 px-8 py-4 bg-brand-600 text-white rounded-2xl font-black text-sm hover:bg-brand-700 transition-all shadow-xl shadow-brand-500/20 group"
           >
-            Explore Site Guide
+            Visit Request Log
             <ChevronRight size={18} className="group-hover:translate-x-1 transition-transform" />
           </Link>
         </div>
         <div className="relative shrink-0 flex items-center justify-center">
           <div className="w-64 h-64 bg-brand-500 rounded-full blur-[80px] opacity-20 absolute"></div>
-          <Code size={200} className="text-white/5 relative z-10 rotate-12" />
+          <Lightbulb size={200} className="text-white/5 relative z-10 rotate-12" />
         </div>
       </div>
 
@@ -114,15 +115,16 @@ export default function Help() {
         <p className="text-xs font-bold text-slate-400 uppercase tracking-widest">Connect with Technical Support:</p>
         <div className="flex gap-6">
           <button className="flex items-center gap-2 text-xs font-black text-slate-600 hover:text-brand-600 transition-colors uppercase tracking-widest">
-            <MessageCircle size={16} />
-            Live Terminal
+            <MessagesSquare size={16} />
+            Support Chat
           </button>
           <button className="flex items-center gap-2 text-xs font-black text-slate-600 hover:text-brand-600 transition-colors uppercase tracking-widest">
             <ExternalLink size={16} />
-            Community Hub
+            Knowledge Base
           </button>
         </div>
       </div>
     </div>
   );
 }
+

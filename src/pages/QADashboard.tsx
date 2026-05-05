@@ -13,7 +13,8 @@ import {
   MoreVertical,
   ChevronRight,
   TrendingUp,
-  User
+  User,
+  ArrowLeft
 } from 'lucide-react';
 import { cn } from '../lib/utils';
 
@@ -31,6 +32,11 @@ export default function QADashboard() {
 
   return (
     <div className="space-y-8 pb-20">
+      <Link to="/executive" className="inline-flex items-center gap-2 text-xs font-bold text-slate-500 hover:text-brand-600 transition-colors uppercase tracking-widest">
+        <ArrowLeft size={16} />
+        Back to Executive Dashboard
+      </Link>
+
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h1 className="text-3xl font-black text-slate-900 tracking-tight mb-2">QA Reviews</h1>

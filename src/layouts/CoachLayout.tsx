@@ -17,7 +17,11 @@ import {
   Maximize2,
   Minimize2,
   LogOut,
-  Target
+  Target,
+  BarChart3,
+  Lightbulb,
+  Info,
+  Zap
 } from 'lucide-react';
 import { cn } from '../lib/utils';
 import { useStore } from '../contexts/StoreContext';
@@ -25,11 +29,13 @@ import { toast } from 'sonner';
 import { motion, AnimatePresence } from 'motion/react';
 
 const navItems = [
-  { name: 'Dashboard', path: '/', icon: LayoutDashboard },
-  { name: 'My Team', path: '/team', icon: Users },
-  { name: 'Skills Matrix', path: '/skills', icon: Target },
-  { name: 'QA Reviews', path: '/qa', icon: CheckCircle2 },
-  { name: 'Coaching', path: '/coaching', icon: MessagesSquare },
+  { name: 'Dashboard', path: '/', icon: Zap, external: false },
+  { name: 'My Team', path: '/team', icon: Users, external: false },
+  { name: 'QA Reviews', path: '/qa', icon: CheckCircle2, external: false },
+  { name: 'Coaching', path: 'https://techlead-coaching-688900746393.us-west2.run.app/', icon: MessagesSquare, external: true },
+  { name: 'Skills Matrix', path: '/skills', icon: Target, external: false },
+  { name: 'Performance Reports', path: '/reports', icon: BarChart3, external: false },
+  { name: 'Exec Hub', path: '/executive', icon: LayoutDashboard, external: false },
 ];
 
 export default function CoachLayout() {
@@ -58,9 +64,12 @@ export default function CoachLayout() {
       return `Agent: ${rep?.name || 'Profile'}`;
     }
     if (path === '/team') return 'Team Operations';
+    if (path === '/executive') return 'Executive Hub';
+    if (path === '/reports') return 'Performance Reports';
     if (path === '/qa') return 'Quality Assurance';
     if (path === '/coaching') return 'Performance Coaching';
     if (path === '/skills') return 'Competency Matrix';
+    if (path === '/requests') return 'Feature & Report Requests';
     if (path === '/settings') return 'Preferences';
     if (path === '/help') return 'Documentation';
     if (path === '/help/functions') return 'Site Guide';
@@ -104,13 +113,15 @@ export default function CoachLayout() {
             <TrendingUp size={focusMode ? 20 : 18} strokeWidth={2.5} />
           </div>
           {!focusMode && (
-            <motion.span 
-              initial={{ opacity: 0, x: -10 }} 
-              animate={{ opacity: 1, x: 0 }}
-              className="font-bold text-slate-800 tracking-tight text-lg"
-            >
-              LeadCoach
-            </motion.span>
+            <div className="flex items-center gap-2">
+              <motion.span 
+                initial={{ opacity: 0, x: -10 }} 
+                animate={{ opacity: 1, x: 0 }}
+                className="font-bold text-slate-800 tracking-tight text-lg"
+              >
+                LeadCoach
+              </motion.span>
+            </div>
           )}
         </div>
 
@@ -206,6 +217,21 @@ export default function CoachLayout() {
               <HelpCircle size={focusMode ? 22 : 18} className="shrink-0 opacity-70 group-hover:opacity-100" />
               {!focusMode && <span>Docs & Help</span>}
             </NavLink>
+
+            <NavLink
+              to="/requests"
+              title={focusMode ? "Feature Requests" : ""}
+              className={({ isActive }) => cn(
+                "flex items-center rounded-xl text-sm font-medium transition-all group",
+                focusMode ? "justify-center p-3 mx-auto w-12" : "gap-3 px-3 py-2.5",
+                isActive 
+                  ? "bg-slate-100 text-slate-900 ring-1 ring-slate-200 text-brand-600" 
+                  : "text-slate-500 hover:bg-slate-50 hover:text-slate-900"
+              )}
+            >
+              <Lightbulb size={focusMode ? 22 : 18} className="shrink-0 opacity-70 group-hover:opacity-100" />
+              {!focusMode && <span>Requests</span>}
+            </NavLink>
           </nav>
         </div>
 
@@ -227,8 +253,14 @@ export default function CoachLayout() {
               <div className="flex flex-col min-w-0">
                 <span className="text-sm font-bold text-slate-800 truncate leading-tight">Daniel Gooding</span>
                 <span className="text-[11px] font-medium text-slate-400 flex items-center gap-1 uppercase tracking-wider">
-                  Senior Coach
+                  System Architect
                 </span>
+                <Link 
+                  to="/evolution" 
+                  className="text-[10px] font-semibold text-brand-600 hover:text-brand-700 mt-1 flex items-center transition-colors"
+                >
+                  View Timeline &rarr;
+                </Link>
               </div>
             )}
           </div>
@@ -288,7 +320,6 @@ export default function CoachLayout() {
 
             <button className="p-2 text-slate-500 hover:text-slate-900 hover:bg-slate-100 rounded-lg transition-all relative">
               <Bell size={20} />
-              <span className="absolute top-2 right-2.5 w-2 h-2 bg-red-500 border-2 border-white rounded-full"></span>
             </button>
           </div>
         </header>

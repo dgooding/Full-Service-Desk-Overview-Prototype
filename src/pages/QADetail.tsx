@@ -9,9 +9,11 @@ import {
   Calendar, 
   CheckCircle2,
   AlertCircle,
-  FileText
+  FileText,
+  MessageCircle
 } from 'lucide-react';
 import { cn } from '../lib/utils';
+import { toast } from 'sonner';
 
 const categories = [
   { id: 'opening', name: 'Opening & Greeting', weight: 10 },
@@ -24,7 +26,7 @@ const categories = [
 
 export default function QADetail() {
   const { qaId } = useParams();
-  const { qaReviews, agents } = useStore();
+  const { qaReviews, agents, logCommunication } = useStore();
 
   const review = qaReviews.find(r => r.id === qaId);
   
@@ -39,12 +41,37 @@ export default function QADetail() {
 
   const agent = agents.find(a => a.id === review.repId);
 
+  const handleDiscuss = () => {
+    if (!agent) return;
+    const email = `${agent.name.toLowerCase().replace(/\s+/g, '.')}@company.com`;
+    const subject = `QA Review Feedback: Ticket ${review.ticket}`;
+    
+    logCommunication({
+      agentId: agent.id,
+      agentName: agent.name,
+      type: 'Teams Chat',
+      subject
+    });
+
+    window.open(`https://teams.microsoft.com/l/chat/0/0?users=${email}`, '_blank');
+    toast.success(`Opening Teams chat with ${agent.name}`);
+  };
+
   return (
     <div className="space-y-8 pb-20 max-w-4xl mx-auto">
-      <Link to="/qa" className="inline-flex items-center gap-2 text-xs font-bold text-slate-500 hover:text-brand-600 transition-colors uppercase tracking-widest">
-        <ChevronLeft size={16} />
-        Back to QA Dashboard
-      </Link>
+      <div className="flex items-center justify-between">
+        <Link to="/qa" className="inline-flex items-center gap-2 text-xs font-bold text-slate-500 hover:text-brand-600 transition-colors uppercase tracking-widest">
+          <ChevronLeft size={16} />
+          Back to QA Dashboard
+        </Link>
+        <button 
+          onClick={handleDiscuss}
+          className="flex items-center gap-2 px-4 py-2 bg-[#444791] text-white rounded-xl text-xs font-bold shadow-lg shadow-indigo-500/20 hover:bg-[#3b3e7a] transition-all active:scale-95"
+        >
+          <MessageCircle size={14} />
+          Discuss Review
+        </button>
+      </div>
 
       <div className="bg-white rounded-[2.5rem] p-10 border border-slate-200 shadow-sm relative overflow-hidden">
         <div className="absolute top-0 right-0 w-64 h-64 bg-slate-50 rounded-bl-[100px] -z-10" />

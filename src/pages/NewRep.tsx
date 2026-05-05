@@ -11,7 +11,7 @@ export default function NewRep() {
   
   const [formData, setFormData] = useState({
     name: '',
-    role: '',
+    role: 'IT Service Desk T1',
     email: '',
     phone: '',
     location: '',
@@ -89,7 +89,7 @@ export default function NewRep() {
                 <input 
                   type="text" 
                   required
-                  placeholder="e.g. L1 Support Technician"
+                  placeholder="e.g. IT Service Desk T1"
                   className="w-full pl-11 pr-4 py-3 bg-slate-50 border-none rounded-xl text-sm font-bold text-slate-700 focus:ring-2 focus:ring-brand-500/20 outline-none transition-all placeholder:text-slate-300 placeholder:font-normal"
                   value={formData.role}
                   onChange={(e) => setFormData({...formData, role: e.target.value})}
